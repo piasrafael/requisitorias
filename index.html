@@ -672,13 +672,40 @@ function buildNE(){
 function buildDocumentXml(){
   var body=buildCapa()+buildDiex()+buildNE();
   body+='<w:sectPr><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr>';
+
+  // shapetype VML necessário para v:shape funcionar
+  var vmlShapeType = '<w:p><w:pPr><w:rPr><w:noProof/></w:rPr></w:pPr>'
+    +'<w:r><w:rPr><w:noProof/></w:rPr>'
+    +'<w:pict>'
+    +'<v:shapetype xmlns:v="urn:schemas-microsoft-com:vml"'
+    +' xmlns:o="urn:schemas-microsoft-com:office:office"'
+    +' id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"'
+    +' path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">'
+    +'<v:stroke joinstyle="miter"/>'
+    +'<v:formulas>'
+    +'<v:f eqn="if lineDrawn pixelLineWidth 0"/>'
+    +'<v:f eqn="sum @0 1 0"/>'
+    +'<v:f eqn="sum 0 0 @1"/>'
+    +'<v:f eqn="prod @2 1 2"/>'
+    +'<v:f eqn="prod @0 11 2"/>'
+    +'<v:f eqn="sum @4 1 0"/>'
+    +'<v:f eqn="prod @1 2 1"/>'
+    +'<v:f eqn="prod @5 21600 pixelWidth"/>'
+    +'<v:f eqn="prod @5 21600 pixelHeight"/>'
+    +'<v:f eqn="sum @3 @7 0"/>'
+    +'<v:f eqn="sum @3 @8 0"/>'
+    +'<v:f eqn="prod @0 @7 3"/>'
+    +'</v:formulas>'
+    +'<v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>'
+    +'<o:lock v:ext="edit" aspectratio="t"/>'
+    +'</v:shapetype>'
+    +'</w:pict></w:r></w:p>';
+
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     +'<w:document'
     +' xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"'
     +' xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex"'
     +' xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"'
-    +' xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink"'
-    +' xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d"'
     +' xmlns:o="urn:schemas-microsoft-com:office:office"'
     +' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
     +' xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"'
@@ -689,19 +716,12 @@ function buildDocumentXml(){
     +' xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
     +' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"'
     +' xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml"'
-    +' xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex"'
-    +' xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid"'
-    +' xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml"'
-    +' xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"'
-    +' xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"'
-    +' xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"'
-    +' xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"'
     +' xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"'
     +' xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"'
     +' xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
     +' xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"'
-    +' mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">'
-    +'<w:body>'+body+'</w:body>'
+    +' mc:Ignorable="w14 w15 wp14">'
+    +'<w:body>'+vmlShapeType+body+'</w:body>'
     +'</w:document>';
 }
 
@@ -784,7 +804,6 @@ function gerarDocx(){
       +'<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
       +'<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
       +'<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>'
-      +'<Override PartName="/word/media/brasao.png" ContentType="image/png"/>'
       +'</Types>');
     z.add('_rels/.rels',
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
