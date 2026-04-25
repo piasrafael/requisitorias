@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gerador de Requisitórias – B Adm Gu Natal</title>
-<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#eef1f7;color:#1a1a2e;min-height:100vh}
@@ -407,7 +407,11 @@ async function gerarDocx(){
   btn.textContent='⏳ Gerando...'; btn.disabled=true;
 
   try{
-    var D=docx; // biblioteca global
+    // Detecta o namespace correto da biblioteca
+    var D = (typeof docx !== 'undefined') ? docx
+          : (typeof window.docx !== 'undefined') ? window.docx
+          : null;
+    if(!D) throw new Error('Biblioteca docx.js não carregou. Verifique sua conexão com a internet e recarregue a página.');
     var TNR='Times New Roman';
     var SZ=n=>n*2; // half-points
 
@@ -639,6 +643,18 @@ async function gerarDocx(){
 // INIT
 document.getElementById('d_data').value=new Date().toISOString().slice(0,10);
 atualizarNE();
+
+// Verifica se a biblioteca docx carregou
+window.addEventListener('load', function(){
+  var D = (typeof docx !== 'undefined') ? docx : (typeof window.docx !== 'undefined') ? window.docx : null;
+  if(!D){
+    var btn=document.getElementById('btn_gerar');
+    btn.textContent='⚠ Sem conexão – DOCX indisponível';
+    btn.disabled=true;
+    btn.style.background='#b91c1c';
+    setStatus('⚠ A biblioteca de geração DOCX não carregou. Verifique sua conexão com a internet.',false);
+  }
+});
 </script>
 </body>
 </html>
