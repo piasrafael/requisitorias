@@ -4,11 +4,10 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gerador de Requisitórias – B Adm Gu Natal</title>
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#eef1f7;color:#1a1a2e;min-height:100vh}
-:root{--hd:#0d2b6b;--hd2:#1a3d8f;--green:#15803d;--red:#dc2626;--border:#c8d0e0;--bg:#f5f7fb}
+:root{--hd:#0d2b6b;--hd2:#1a3d8f;--green:#15803d;--red:#dc2626;--border:#c8d0e0}
 header{background:var(--hd);color:#fff;padding:14px 24px}
 header h1{font-size:16px;font-weight:700}
 header p{font-size:11px;color:#aac4ff;margin-top:2px}
@@ -46,11 +45,9 @@ textarea{resize:vertical;line-height:1.6}
 .bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#e8eef8;border-top:1px solid var(--border);margin:0 0 8px}
 #status{font-size:12px;color:var(--green);font-weight:600}
 .btn-copy{background:#15803d;color:#fff;padding:9px 20px;font-size:13px;border:none;border-radius:5px;cursor:pointer;font-weight:700;margin-top:10px}
-.desp-box{border:1px solid var(--border);border-radius:5px;padding:10px;background:var(--bg)}
 </style>
 </head>
 <body>
-
 <header>
   <h1>⚔ GERADOR DE REQUISITÓRIAS — B Adm Gu Natal</h1>
   <p>Sistema Integrado · Capa + DIEx Requisitório + Descrição NE · Exporta DOCX</p>
@@ -68,13 +65,11 @@ textarea{resize:vertical;line-height:1.6}
 </div>
 
 <div class="panel-wrap">
-
 <!-- 0: CAPA -->
 <div class="tab-panel active" id="panel-0">
   <div class="sec-hd">DADOS DA CAPA REQUISITÓRIA</div>
   <div class="frow"><label>Nome da OM:</label>
-    <select id="c_om" onchange="syncOM();atualizarNE()">
-      <option value="">— selecione —</option>
+    <select id="c_om" onchange="syncOM()"><option value="">— selecione —</option>
       <option>BASE ADMINISTRATIVA DA GUARNIÇÃO DE NATAL</option>
       <option>16º BATALHÃO DE INFANTARIA MOTORIZADO</option>
       <option>17º GRUPO DE ARTILHARIA DE CAMPANHA</option>
@@ -95,7 +90,6 @@ textarea{resize:vertical;line-height:1.6}
   <div class="frow"><label>UG:</label>
     <select id="c_ug"><option value="">— selecione —</option><option>PRIMÁRIA</option><option>SECUNDÁRIA</option></select></div>
 </div>
-
 <!-- 1: CABEÇALHO -->
 <div class="tab-panel" id="panel-1">
   <div class="sec-hd">CABEÇALHO DO DIEx REQUISITÓRIO</div>
@@ -122,7 +116,6 @@ textarea{resize:vertical;line-height:1.6}
     <input type="text" id="d_req" class="readonly-inp"/></div>
   <div class="frow"><label></label><span class="hint">Preenchido automaticamente da Capa</span></div>
 </div>
-
 <!-- 2: MODALIDADE -->
 <div class="tab-panel" id="panel-2">
   <div class="sec-hd">§1 – MODALIDADE DE LICITAÇÃO</div>
@@ -136,7 +129,6 @@ textarea{resize:vertical;line-height:1.6}
   <div id="modal_fields" style="margin-top:8px"></div>
   <div class="modal-preview" id="modal_preview">Selecione uma modalidade.</div>
 </div>
-
 <!-- 3: FORNECEDOR -->
 <div class="tab-panel" id="panel-3">
   <div class="sec-hd">§2 – DADOS DO FORNECEDOR</div>
@@ -171,14 +163,12 @@ textarea{resize:vertical;line-height:1.6}
     <td id="item_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
   </tfoot></table>
 </div>
-
 <!-- 4: JUSTIFICATIVA -->
 <div class="tab-panel" id="panel-4">
   <div class="sec-hd">§3 – JUSTIFICATIVA</div>
   <p style="font-size:12px;color:#555;margin-bottom:8px">Descreva a necessidade, objetivo PEO e previsão no PCA.</p>
   <textarea id="v_justif" rows="12" placeholder="Justifique a necessidade da aquisição ou contratação..."></textarea>
 </div>
-
 <!-- 5: PROP. RECURSO -->
 <div class="tab-panel" id="panel-5">
   <div class="sec-hd">§5 – PROPOSTA DE RECURSO (NOTAS DE CRÉDITO)</div>
@@ -203,7 +193,6 @@ textarea{resize:vertical;line-height:1.6}
     <td id="nc_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
   </tfoot></table>
 </div>
-
 <!-- 6: ASSINATURAS -->
 <div class="tab-panel" id="panel-6">
   <div class="sec-hd">ASSINATURA DO REQUISITANTE</div>
@@ -218,7 +207,6 @@ textarea{resize:vertical;line-height:1.6}
   <div class="frow"><label>Nome completo:</label><input type="text" id="a_cmt_nome"/></div>
   <div class="frow"><label>Posto:</label><input type="text" id="a_cmt_posto"/></div>
 </div>
-
 <!-- 7: NE -->
 <div class="tab-panel" id="panel-7">
   <div class="sec-hd">🗒 BLOCO 3 – DESCRIÇÃO DA NOTA DE EMPENHO (NE)</div>
@@ -242,25 +230,24 @@ textarea{resize:vertical;line-height:1.6}
   <button class="btn-copy" onclick="copiarNE()">📋 Copiar Descrição</button>
   <p style="font-size:11px;color:#888;margin-top:8px;font-style:italic">Cole no campo Descrição da NE no SIAFI.</p>
 </div>
-
-</div><!-- end panel-wrap -->
+</div>
 
 <div class="bottom-bar">
   <span id="status"></span>
   <div style="display:flex;gap:8px">
     <button class="btn btn-gray" onclick="limparTudo()">🗑 Limpar tudo</button>
-    <button class="btn btn-blue" onclick="gerarDocx()" id="btn_gerar">📄 Gerar DOCX (Word)</button>
+    <button class="btn btn-blue" id="btn_gerar" onclick="gerarDocx()">📄 Gerar DOCX (Word)</button>
   </div>
 </div>
 
 <script>
-var itens=[], ncs=[];
+var itens=[],ncs=[];
 var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
 function showTab(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
-  if(i===7) atualizarNE();
+  if(i===7)atualizarNE();
 }
 function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function syncNUP(){document.getElementById('d_nup').value=document.getElementById('c_nup').value;}
@@ -270,29 +257,16 @@ function fmtDate(v){if(!v)return'';var p=v.split('-');return p[2]+'/'+p[1]+'/'+p
 function fmtDateExt(v){if(!v)return'';var p=v.split('-');return parseInt(p[2])+' de '+MESES[parseInt(p[1])-1]+' de '+p[0];}
 function fmtBRL(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function parseNum(s){return parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0;}
-function setStatus(msg,ok){var s=document.getElementById('status');s.style.color=ok?'#15803d':'#dc2626';s.textContent=msg;setTimeout(()=>s.textContent='',4000);}
+function setStatus(msg,ok){var s=document.getElementById('status');s.style.color=ok?'#15803d':'#dc2626';s.textContent=msg;setTimeout(()=>s.textContent='',5000);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-// MODAL
 function renderModalFields(){
-  var m=gv('modal_tipo'), f=document.getElementById('modal_fields');
+  var m=gv('modal_tipo'),f=document.getElementById('modal_fields');
   f.innerHTML='';
   if(!m){document.getElementById('modal_preview').textContent='Selecione uma modalidade.';return;}
-  function row(lbl,id,hint){
-    var d=document.createElement('div');d.className='frow';
-    d.innerHTML='<label>'+lbl+'</label><input type="text" id="'+id+'" oninput="previewModal();atualizarNE()" placeholder="'+(hint||'')+'"/>';
-    f.appendChild(d);
-  }
-  function rowDate(lbl,id){
-    var d=document.createElement('div');d.className='frow';
-    d.innerHTML='<label>'+lbl+'</label><input type="date" id="'+id+'" oninput="previewModal();atualizarNE()" style="width:200px"/>';
-    f.appendChild(d);
-  }
-  function rowSel(lbl,id,opts){
-    var d=document.createElement('div');d.className='frow';
-    var ops=opts.map(o=>'<option>'+o+'</option>').join('');
-    d.innerHTML='<label>'+lbl+'</label><select id="'+id+'" onchange="previewModal();atualizarNE()" style="max-width:100px">'+ops+'</select>';
-    f.appendChild(d);
-  }
+  function row(lbl,id,hint){var d=document.createElement('div');d.className='frow';d.innerHTML='<label>'+lbl+'</label><input type="text" id="'+id+'" oninput="previewModal();atualizarNE()" placeholder="'+(hint||'')+'"/>';f.appendChild(d);}
+  function rowDate(lbl,id){var d=document.createElement('div');d.className='frow';d.innerHTML='<label>'+lbl+'</label><input type="date" id="'+id+'" oninput="previewModal();atualizarNE()" style="width:200px"/>';f.appendChild(d);}
+  function rowSel(lbl,id,opts){var d=document.createElement('div');d.className='frow';var ops=opts.map(o=>'<option>'+o+'</option>').join('');d.innerHTML='<label>'+lbl+'</label><select id="'+id+'" onchange="previewModal();atualizarNE()" style="max-width:100px">'+ops+'</select>';f.appendChild(d);}
   if(m==='Pregão UGG'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');rowDate('Vigência:','m_vig');}
   else if(m==='Pregão UGP'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');row('Sigla/UASG:','m_uasg','ex.: H Gu N / 160343');rowDate('Vigência:','m_vig');}
   else if(m==='Pregão UGNP'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');row('Sigla/UASG:','m_uasg','ex.: H Gu N / 160343');}
@@ -303,87 +277,75 @@ function renderModalFields(){
 }
 function modalTxt(){
   var m=gv('modal_tipo'),nr=gv('m_nr')||'',vig=fmtDate(gv('m_vig')),uasg=gv('m_uasg')||'';
-  if(m==='Pregão UGG')     return 'Pregão UGG – Pregão nº '+nr+' - B Adm Gu Natal - Vigência: '+vig+'.';
-  if(m==='Pregão UGP')     return 'Pregão UGP – Pregão nº '+nr+' – '+uasg+' - Vigência: '+vig+'.';
-  if(m==='Pregão UGNP')    return 'Pregão UGNP – Pregão nº '+nr+' – '+uasg+'.';
-  if(m==='Dispensa de Licitação') return 'Dispensa de Licitação nº '+nr+' – B Adm Gu Natal.';
-  if(m==='Inexigibilidade de Licitação') return 'Inexigibilidade de Licitação nº '+nr+' – B Adm Gu Natal.';
-  if(m==='Contrato'){var ad=gv('m_aditivo');return 'Contrato nº '+nr+' – Aditivo: '+ad+' – Vigência: '+vig+'.';}
-  if(m==='Reforçar NE')    return 'Reforçar a Nota de Empenho '+nr+'.';
-  return '';
+  if(m==='Pregão UGG')return'Pregão UGG – Pregão nº '+nr+' - B Adm Gu Natal - Vigência: '+vig+'.';
+  if(m==='Pregão UGP')return'Pregão UGP – Pregão nº '+nr+' – '+uasg+' - Vigência: '+vig+'.';
+  if(m==='Pregão UGNP')return'Pregão UGNP – Pregão nº '+nr+' – '+uasg+'.';
+  if(m==='Dispensa de Licitação')return'Dispensa de Licitação nº '+nr+' – B Adm Gu Natal.';
+  if(m==='Inexigibilidade de Licitação')return'Inexigibilidade de Licitação nº '+nr+' – B Adm Gu Natal.';
+  if(m==='Contrato'){var ad=gv('m_aditivo');return'Contrato nº '+nr+' – Aditivo: '+ad+' – Vigência: '+vig+'.';}
+  if(m==='Reforçar NE')return'Reforçar a Nota de Empenho '+nr+'.';
+  return'';
 }
 function modalNeTxt(){
   var m=gv('modal_tipo'),nr=gv('m_nr')||'';
-  if(m==='Pregão UGG')     return 'Pregão UGG Nº '+nr;
-  if(m==='Pregão UGP')     return 'Pregão UGP Nº '+nr;
-  if(m==='Pregão UGNP')    return 'Pregão UGNP Nº '+nr;
-  if(m==='Dispensa de Licitação') return 'Dispensa de Licitação Nº '+nr;
-  if(m==='Inexigibilidade de Licitação') return 'Inexigibilidade de Licitação Nº '+nr;
-  if(m==='Contrato')       return 'Contrato Nº '+nr;
-  if(m==='Reforçar NE')    return 'Reforçar NE '+nr;
-  return '';
+  if(m==='Pregão UGG')return'Pregão UGG Nº '+nr;
+  if(m==='Pregão UGP')return'Pregão UGP Nº '+nr;
+  if(m==='Pregão UGNP')return'Pregão UGNP Nº '+nr;
+  if(m==='Dispensa de Licitação')return'Dispensa de Licitação Nº '+nr;
+  if(m==='Inexigibilidade de Licitação')return'Inexigibilidade de Licitação Nº '+nr;
+  if(m==='Contrato')return'Contrato Nº '+nr;
+  if(m==='Reforçar NE')return'Reforçar NE '+nr;
+  return'';
 }
-function previewModal(){
-  document.getElementById('modal_preview').textContent=modalTxt()||'Preencha os campos.';
-  atualizarNE();
-}
+function previewModal(){document.getElementById('modal_preview').textContent=modalTxt()||'Preencha os campos.';atualizarNE();}
 
-// ITENS
 function calcRtotal(){
   var q=parseFloat(gv('i_qtd').replace(',','.'))||0,u=parseFloat(gv('i_unit').replace(',','.'))||0;
   document.getElementById('i_rtotal').value=fmtBRL(q*u);
 }
 function addItem(){
   var q=parseFloat(gv('i_qtd').replace(',','.'))||0,u=parseFloat(gv('i_unit').replace(',','.'))||0;
-  var rt=fmtBRL(q*u);
-  var it={ord:gv('i_ord'),item:gv('i_item'),si:gv('i_si'),desc:gv('i_desc'),und:gv('i_und'),qtd:gv('i_qtd'),unit:gv('i_unit'),rtotal:rt};
+  var it={ord:gv('i_ord'),item:gv('i_item'),si:gv('i_si'),desc:gv('i_desc'),und:gv('i_und'),qtd:gv('i_qtd'),unit:gv('i_unit'),rtotal:fmtBRL(q*u)};
   if(!it.desc){alert('Informe a descrição do item.');return;}
-  itens.push(it); renderItens();
+  itens.push(it);renderItens();
   ['i_ord','i_item','i_si','i_desc','i_und','i_qtd','i_unit','i_rtotal'].forEach(id=>document.getElementById(id).value='');
 }
 function remItem(i){itens.splice(i,1);renderItens();}
 function renderItens(){
-  document.getElementById('item_tbody').innerHTML=itens.map((it,i)=>`<tr><td style="text-align:center">${it.ord}</td><td style="text-align:center">${it.item}</td><td style="text-align:center">${it.si}</td><td>${it.desc}</td><td style="text-align:center">${it.und}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right">${it.unit}</td><td style="text-align:right;font-weight:700">${it.rtotal}</td><td style="text-align:center"><button class="btn btn-red" onclick="remItem(${i})">✕</button></td></tr>`).join('');
-  var total=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
+  document.getElementById('item_tbody').innerHTML=itens.map((it,i)=>`<tr><td style="text-align:center">${it.ord}</td><td style="text-align:center">${it.item}</td><td style="text-align:center">${it.si}</td><td>${it.desc}</td><td style="text-align:center">${it.und}</td><td style="text-align:center">${it.qtd}</td><td style="text-align:right">${it.unit}</td><td style="text-align:right;font-weight:700">${it.rtotal}</td><td><button class="btn btn-red" onclick="remItem(${i})">✕</button></td></tr>`).join('');
+  var t=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
   document.getElementById('item_tfoot').style.display=itens.length?'':'none';
-  document.getElementById('item_total').textContent=fmtBRL(total);
+  document.getElementById('item_total').textContent=fmtBRL(t);
 }
-
-// NCs
 function addNC(){
   var nc={nc:gv('n_nc'),esf:gv('n_esf'),ptres:gv('n_ptres'),fonte:gv('n_fonte'),nd:gv('n_nd'),ugr:gv('n_ugr'),pi:gv('n_pi'),valor:gv('n_valor')};
   if(!nc.nc){alert('Informe o número da NC.');return;}
-  ncs.push(nc); renderNCs(); atualizarNE();
+  ncs.push(nc);renderNCs();atualizarNE();
   ['n_nc','n_esf','n_ptres','n_fonte','n_nd','n_ugr','n_pi','n_valor'].forEach(id=>document.getElementById(id).value='');
 }
 function remNC(i){ncs.splice(i,1);renderNCs();atualizarNE();}
 function renderNCs(){
-  document.getElementById('nc_tbody').innerHTML=ncs.map((nc,i)=>`<tr><td>${nc.nc}</td><td>${nc.esf}</td><td>${nc.ptres}</td><td>${nc.fonte}</td><td>${nc.nd}</td><td>${nc.ugr}</td><td>${nc.pi}</td><td style="text-align:right">${nc.valor}</td><td style="text-align:center"><button class="btn btn-red" onclick="remNC(${i})">✕</button></td></tr>`).join('');
-  var total=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
+  document.getElementById('nc_tbody').innerHTML=ncs.map((nc,i)=>`<tr><td>${nc.nc}</td><td>${nc.esf}</td><td>${nc.ptres}</td><td>${nc.fonte}</td><td>${nc.nd}</td><td>${nc.ugr}</td><td>${nc.pi}</td><td style="text-align:right">${nc.valor}</td><td><button class="btn btn-red" onclick="remNC(${i})">✕</button></td></tr>`).join('');
+  var t=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
   document.getElementById('nc_tfoot').style.display=ncs.length?'':'none';
-  document.getElementById('nc_total').textContent=fmtBRL(total);
+  document.getElementById('nc_total').textContent=fmtBRL(t);
 }
-
-// NE
 function atualizarNE(){
   var vistos=new Set(),lista=[];
   ncs.forEach(nc=>{var n=nc.nc.trim();if(n&&!vistos.has(n)){lista.push(n);vistos.add(n);}});
   var ncStr=lista.join(' / ')||'—';
-  var assunto=gv('c_assunto')||'—';
-  var diexNr=gv('d_diexnr')||'—';
+  var assunto=gv('c_assunto')||'—',diexNr=gv('d_diexnr')||'—';
   var dataFmt=fmtDate(document.getElementById('d_data').value)||'—';
-  var modalNe=modalNeTxt()||'—';
-  var omvNe=gv('ne_omv')||'—';
+  var modalNe=modalNeTxt()||'—',omvNe=gv('ne_omv')||'—';
   ['nf_nc','nf_assunto','nf_diex','nf_data','nf_modal'].forEach((id,i)=>{
-    var vals=[ncStr,assunto,diexNr,dataFmt,modalNe];
-    var e=document.getElementById(id);if(e)e.textContent=vals[i];
+    var e=document.getElementById(id);if(e)e.textContent=[ncStr,assunto,diexNr,dataFmt,modalNe][i];
   });
   var desc='('+omvNe+') – '+ncStr+' – '+assunto+' – CONFORME DIEX '+diexNr+' DE '+dataFmt+' – '+modalNe;
   var r=document.getElementById('ne_resultado');if(r)r.textContent=desc;
 }
 function copiarNE(){
-  var txt=document.getElementById('ne_resultado').textContent;
-  navigator.clipboard.writeText(txt).then(()=>setStatus('✅ Descrição copiada!',true));
+  navigator.clipboard.writeText(document.getElementById('ne_resultado').textContent)
+    .then(()=>setStatus('✅ Descrição copiada!',true));
 }
 function limparTudo(){
   if(!confirm('Deseja limpar todos os campos?'))return;
@@ -395,266 +357,410 @@ function limparTudo(){
   atualizarNE();
 }
 
-// ═══════════════════════════════════════════════════
-// GERAÇÃO DOCX
-// ═══════════════════════════════════════════════════
-async function gerarDocx(){
+// ══════════════════════════════════════════════
+// GERAÇÃO DOCX 100% NATIVA (sem bibliotecas externas)
+// Constrói o XML do formato OOXML manualmente e empacota em ZIP via base64
+// ══════════════════════════════════════════════
+
+// ── Helpers XML ──────────────────────────────────────────────
+function x(tag,attrs,inner){
+  var a=Object.entries(attrs||{}).map(([k,v])=>` ${k}="${v}"`).join('');
+  return inner===undefined?`<${tag}${a}/>`:`<${tag}${a}>${inner}</${tag}>`;
+}
+// Parágrafo Word
+function wPar(runs,opts){
+  opts=opts||{};
+  var pPr='';
+  var jc=opts.jc||'';
+  var sp=x('w:spacing',{'w:after':'0','w:before':'0','w:line':'360','w:lineRule':'auto'});
+  var jcEl=jc?x('w:jc',{'w:val':jc}):'';
+  pPr=x('w:pPr',{},sp+jcEl+(opts.pageBreak?x('w:pageBreakBefore',{'w:val':'1'}):''));
+  return x('w:p',{},pPr+runs);
+}
+// Run Word
+function wRun(txt,bold,sz){
+  sz=sz||24; // half-points, 24=12pt
+  var rPr=x('w:rPr',{},
+    x('w:rFonts',{'w:ascii':'Times New Roman','w:hAnsi':'Times New Roman'})+
+    (bold?x('w:b',{})+''+x('w:bCs',{}):'')+ 
+    x('w:sz',{'w:val':String(sz)})+
+    x('w:szCs',{'w:val':String(sz)})+
+    x('w:color',{'w:val':'000000'})
+  );
+  var safe=String(txt||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return x('w:r',{},rPr+x('w:t',{'xml:space':'preserve'},safe));
+}
+function wRunB(txt,sz){return wRun(txt,true,sz);}
+
+// Célula de tabela
+function wCell(content,opts){
+  opts=opts||{};
+  var brd=x('w:tcBorders',{},
+    ['top','left','bottom','right'].map(s=>x('w:'+s,{'w:val':'single','w:sz':'4','w:space':'0','w:color':'000000'})).join('')
+  );
+  var tcPrInner=brd+(opts.span?x('w:gridSpan',{'w:val':String(opts.span)}):'')+(opts.shade?x('w:shd',{'w:val':'clear','w:color':'auto','w:fill':opts.shade}):'');
+  var tcPr=x('w:tcPr',{},tcPrInner);
+  return x('w:tc',{},tcPr+content);
+}
+// Linha de tabela
+function wRow(cells,height){
+  var trPr=height?x('w:trPr',{},x('w:trHeight',{'w:val':String(height),'w:hRule':'exact'})):x('w:trPr',{});
+  return x('w:tr',{},trPr+cells);
+}
+// Tabela completa
+function wTable(rows){
+  var tblPr=x('w:tblPr',{},
+    x('w:tblW',{'w:w':'5000','w:type':'pct'})+
+    x('w:tblLayout',{'w:type':'autofit'})
+  );
+  return x('w:tbl',{},tblPr+rows);
+}
+// Parágrafo simples em célula
+function cp(txt,bold,jc,sz){return wPar(wRun(txt,bold,sz||20),{jc:jc||''});}
+function cpB(txt,jc,sz){return cp(txt,true,jc,sz);}
+
+// ── Bloco CAPA ───────────────────────────────────────────────
+function buildCapa(){
+  var om=gv('c_om'),omv=gv('c_omv'),setor=gv('c_setor'),nup=gv('c_nup'),assunto=gv('c_assunto'),ug=gv('c_ug');
+  var paras='';
+  // Cabeçalho
+  paras+=wPar(wRunB(om,22),{jc:'center'});
+  paras+=wPar(wRunB('MINISTÉRIO DA DEFESA',22),{jc:'center'});
+  paras+=wPar(wRunB('EXÉRCITO BRASILEIRO',22),{jc:'center'});
+  paras+=wPar(wRunB(om,22),{jc:'center'});
+  paras+=wPar(wRun(''));
+
+  // Tabela 1
+  var t1r1=wRow(wCell(
+    wPar(wRunB('INTERESSADO: ')+wRun(omv))+
+    wPar(wRunB('SETOR REQUISITANTE: ')+wRun(setor))+
+    wPar(wRunB('PROCESSO: ')+wRun(nup))
+  ));
+  var t1r2=wRow(wCell(
+    wPar(wRunB('ASSUNTO: ')+wRun(assunto))+
+    wPar(wRunB('ANEXOS: ')+wRun('DIEx Requisitório, Nota de Crédito, Certidões de regularidade fiscal e demais documentos necessários para o processo (SFC).'))+
+    wPar(wRunB('UG: ')+wRun(ug))+
+    wPar(wRunB('EMPENHO: ')+wRun('2026NE____________     ')+wRunB('DATA DO EMPENHO: ')+wRun('_________'))+
+    wPar(wRunB('RESPONSÁVEL: ')+wRun('___________________________'))
+  ));
+  paras+=wTable(t1r1+t1r2);
+  paras+=wPar(wRun(''));
+
+  // Tabela 2 – Destino/Data
+  var t2=wRow(
+    wCell(cpB('DESTINO','center'))+wCell(cpB('DATA','center'))
+  );
+  for(var i=0;i<5;i++) t2+=wRow(wCell(cp(''))+wCell(cp('')),450);
+  paras+=wTable(t2);
+  paras+=wPar(wRun(''),{});
+  paras+=wPar(wRun(''),{});
+  paras+=wPar(wRunB('NATAL – RN'),{jc:'center'});
+  paras+=wPar(wRunB('2026'),{jc:'center'});
+  return paras;
+}
+
+// ── Bloco DIEx ───────────────────────────────────────────────
+function buildDiex(){
+  var om=gv('c_om');
+  var diexNr=gv('d_diexnr'),nup=gv('d_nup');
+  var dataExt=fmtDateExt(document.getElementById('d_data').value)||'';
+  var cargo=gv('d_cargo'),omvDo=gv('d_omvdo'),asstp=gv('d_asstp'),req=gv('d_req');
+  var razao=gv('d_razao'),cnpj=gv('d_cnpj'),tempenho=gv('d_tempenho');
+  var justif=document.getElementById('v_justif').value||'';
+  var modal=modalTxt();
+  var J='both';
+
+  var p='';
+  // Quebra de página + cabeçalho
+  p+=wPar(wRun(''),{pageBreak:true});
+  p+=wPar(wRunB('MINISTÉRIO DA DEFESA',22),{jc:'center'});
+  p+=wPar(wRunB('EXÉRCITO BRASILEIRO',22),{jc:'center'});
+  p+=wPar(wRunB(om,22),{jc:'center'});
+  p+=wPar(wRun(''));
+  p+=wPar(wRunB('DIEx Requisitório nº ')+wRun(diexNr));
+  p+=wPar(wRunB('EB: ')+wRun(nup));
+  p+=wPar(wRun(''));
+  p+=wPar(wRun('Natal-RN, '+dataExt+'.'),{jc:'right'});
+  p+=wPar(wRun(''));
+  p+=wPar(wRunB('Do ')+wRun(cargo+' '+omvDo));
+  p+=wPar(wRunB('Ao ')+wRun('Ordenador de Despesa da B Adm Gu Natal'));
+  p+=wPar(wRunB('Assunto: ')+wRun('requisição para empenho de '+asstp));
+  p+=wPar(wRunB('Requisitante: ')+wRun(req));
+  p+=wPar(wRun(''));
+
+  // §1
+  p+=wPar(wRunB('1. ')+wRun('Nos termos do contido no documento acima referenciado, solicito providências junto ao Ordenador de Despesas, no sentido de aprovar a requisição de acordo com o que se segue:'),{jc:J});
+  p+=wPar(wRun('    a. Modalidade de licitação:'),{jc:J});
+  p+=wPar(wRun('    '+modal),{jc:J});
+  p+=wPar(wRun(''));
+
+  // §2
+  p+=wPar(wRunB('2. ')+wRun('Dados do fornecedor e especificações do item:'),{jc:J});
+
+  // Tabela fornecedor
+  var totalItens=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
+  var cabsItens=['ORD','ITEM','SI','DESCRIÇÃO','UND','QTD','R$ UNIT','R$ TOTAL','QTD','R$ TOTAL','RESP','RUBRICA'];
+  var iRows=itens.map(it=>wRow(
+    [it.ord,it.item,it.si,it.desc,it.und,it.qtd,it.unit,it.rtotal,'','','','']
+    .map(v=>wCell(cp(v,'','center',18))).join('')
+  )).join('');
+
+  p+=wTable(
+    wRow(wCell(cpB('RAZÃO SOCIAL','',20))+wCell(cp(razao,'','',20),{span:11}))+
+    wRow(wCell(cpB('CNPJ','',20))+wCell(cp(cnpj,'','',20),{span:11}))+
+    wRow(wCell(cpB('TIPO DE EMPENHO','',20))+wCell(cp(tempenho,'','',20),{span:11}))+
+    wRow(wCell(cpB('PREENCHIMENTO A CARGO DA OM','center',18),{span:8})+wCell(cpB('RETIFICAÇÕES (SFC) - A CARGO DO EMPENHADOR','center',16),{span:4}))+
+    wRow(cabsItens.map(h=>wCell(cpB(h,'center',16))).join(''))+
+    iRows+
+    wRow(wCell(cpB('TOTAL','',20),{span:7})+wCell(cpB(fmtBRL(totalItens),'',20))+wCell(cp(''))+wCell(cp(''))+wCell(cp(''))+wCell(cp('')))
+  );
+  p+=wPar(wRun(''));
+
+  // §3
+  p+=wPar(wRunB('3. ')+wRun('Justificativa para a aquisição/contratação:'),{jc:J});
+  p+=wPar(wRun(''));
+  p+=wPar(wRun(justif),{jc:J});
+  p+=wPar(wRun(''));
+
+  // §4
+  p+=wPar(wRunB('4. ')+wRun('Confirmo que os quantitativos e/ou valores mínimos dos itens para empenho e os quantitativos por OM foram verificados e obedecidos'),{jc:J});
+  p+=wPar(wRun(''));
+
+  // §5
+  p+=wPar(wRunB('5. ')+wRun('Proposta de recurso:'),{jc:J});
+  var totalNc=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
+  var ncRows=ncs.map(nc=>wRow(
+    ['nc','esf','ptres','fonte','nd','ugr','pi','valor'].map(k=>wCell(cp(nc[k],'','',18))).join('')
+  )).join('');
+  p+=wTable(
+    wRow(['NC','ESF','PTRES','FONTE','ND','UGR','PI','VALOR'].map(h=>wCell(cpB(h,'center',20))).join(''))+
+    ncRows+
+    wRow(wCell(cpB('TOTAL','',20),{span:7})+wCell(cpB(fmtBRL(totalNc),'',20)))
+  );
+  p+=wPar(wRun(''));
+
+  // §6
+  p+=wPar(wRunB('6. ')+wRun('Nos termos contidos na Lei 14.133/21, solicito providências junto ao Ordenador de Despesas da Base Administrativa desta Guarnição no sentido de aprovar a presente requisição.'),{jc:J});
+  p+=wPar(wRun(''));
+  p+=wPar(wRun(''));
+  p+=wPar(wRun(''));
+  p+=wPar(wRunB(gv('a_req_nome')+' – '+gv('a_req_posto')),{jc:'center'});
+  p+=wPar(wRun(gv('a_req_func')),{jc:'center'});
+  p+=wPar(wRun(''));
+
+  // Despachos
+  function despCell(titulo,nome,posto,func){
+    return wCell(
+      cpB(titulo,'',20)+
+      cp('(    ) Sou de parecer FAVORÁVEL à aquisição do material / serviço requisitado.','',18)+
+      cp('(    ) Sou de parecer DESFAVORÁVEL à aquisição do material / serviço requisitado, tendo em vista:','',18)+
+      cp('________________________________________________________________','',18)+
+      cp('________________________________________________________________','',18)+
+      cp('Natal - RN, _____ / _____ / 2026.','',18)+
+      cp('','',18)+cp('','',18)+
+      cpB(nome+' – '+posto,'',18)+
+      cp(func,'',18)
+    );
+  }
+  p+=wTable(wRow(despCell('DESPACHO DO FISCAL ADMINISTRATIVO DA OM',gv('a_fisc_nome'),gv('a_fisc_posto'),'Fisc Adm OMV')+despCell('DESPACHO DO CMT OM',gv('a_cmt_nome'),gv('a_cmt_posto'),'Cmt da OMV')));
+  p+=wPar(wRun(''));
+
+  // OD
+  p+=wTable(wRow(wCell(
+    cp('(   ) DEFIRO: 1. Ordeno a aquisição do material/serviço requisitado; 2. A SALC emita Nota de Empenho, submetendo-a a este OD posteriormente. (   ) INDEFIRO, tendo em vista:','',18)+
+    cp('__________________________________________________________________________________________','',18)+
+    cp('__________________________________________________________________________________________','',18)+
+    cp('(   ) O requisitante promova as alterações indicadas; (   ) Arquive-se.','',18)+
+    cp('Natal - RN, _____ / _____ / 2026.','',18)+
+    cp('','',18)+cp('','',18)+
+    cpB('FERNANDO TEODORO COELHO DE ARAÚJO JÚNIOR - Cel','',18)+
+    cp('OD Base Adm Gu N','',18)
+  )));
+  return p;
+}
+
+// ── Bloco NE ─────────────────────────────────────────────────
+function buildNE(){
+  var om=gv('c_om');
+  var neDesc=document.getElementById('ne_resultado').textContent||'';
+  var p='';
+  p+=wPar(wRun(''),{pageBreak:true});
+  p+=wPar(wRunB('MINISTÉRIO DA DEFESA',22),{jc:'center'});
+  p+=wPar(wRunB('EXÉRCITO BRASILEIRO',22),{jc:'center'});
+  p+=wPar(wRunB(om,22),{jc:'center'});
+  p+=wPar(wRun(''));
+  p+=wPar(wRunB('DESCRIÇÃO DA NOTA DE EMPENHO'),{jc:'center'});
+  p+=wPar(wRun(''));
+  p+=wTable(
+    wRow(wCell(cpB('DESCRIÇÃO PARA A NOTA DE EMPENHO (NE)','center',22),{shade:'E8EEF8'}))+
+    wRow(wCell(wPar(wRun(neDesc,false,24))))
+  );
+  p+=wPar(wRun(''));
+  p+=wPar(wRunB('INSTRUÇÕES: ',20)+wRun('Copie o texto acima e cole no campo "Descrição" da Nota de Empenho no sistema SIAFI.',false,20),{jc:'both'});
+  return p;
+}
+
+// ── Montar arquivo DOCX (ZIP manual em base64) ───────────────
+function gerarDocx(){
   var obrig=[{id:'c_om',l:'Capa → Nome da OM'},{id:'c_omv',l:'Capa → OMV'},{id:'c_setor',l:'Capa → Setor'},{id:'c_nup',l:'Capa → NUP'},{id:'c_assunto',l:'Capa → Assunto'},{id:'c_ug',l:'Capa → UG'},{id:'d_diexnr',l:'DIEx → DIEx nº'},{id:'d_cargo',l:'DIEx → Cargo'},{id:'d_omvdo',l:'DIEx → OMV (Do)'},{id:'d_razao',l:'Fornecedor → Razão Social'},{id:'d_cnpj',l:'Fornecedor → CNPJ'},{id:'d_tempenho',l:'Fornecedor → Tipo Empenho'}];
   var falta=obrig.filter(o=>!gv(o.id)).map(o=>o.l);
   if(falta.length){alert('Preencha os campos obrigatórios:\n\n'+falta.join('\n'));return;}
 
   var btn=document.getElementById('btn_gerar');
-  btn.textContent='⏳ Gerando...'; btn.disabled=true;
+  btn.textContent='⏳ Gerando...';btn.disabled=true;
 
   try{
-    // Detecta o namespace correto da biblioteca
-    var D = (typeof docx !== 'undefined') ? docx
-          : (typeof window.docx !== 'undefined') ? window.docx
-          : null;
-    if(!D) throw new Error('Biblioteca docx.js não carregou. Verifique sua conexão com a internet e recarregue a página.');
-    var TNR='Times New Roman';
-    var SZ=n=>n*2; // half-points
+    // Construir document.xml
+    var margin=`<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/>`;
+    var body=buildCapa()+buildDiex()+buildNE();
+    var docXml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+  xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+  xmlns:w10="urn:schemas-microsoft-com:office:word"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+  xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+  xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+  xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+  xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+  mc:Ignorable="w14 wp14">
+<w:body>${body}<w:sectPr>${margin}</w:sectPr></w:body></w:document>`;
 
-    // helpers
-    var run=(txt,opts={})=>new D.TextRun({text:txt,font:TNR,size:SZ(12),color:'000000',...opts});
-    var runB=(txt,sz=12)=>run(txt,{bold:true,size:SZ(sz)});
-    var par=(children,opts={})=>new D.Paragraph({children,spacing:{after:0,before:0,line:360,lineRule:D.LineRuleType.AUTO},...opts});
-    var parJ=(children)=>par(children,{alignment:D.AlignmentType.BOTH});
-    var parR=(children)=>par(children,{alignment:D.AlignmentType.RIGHT});
-    var parC=(children)=>par(children,{alignment:D.AlignmentType.CENTER});
-    var blank=()=>par([run('')]);
+    // Arquivos do DOCX (formato ZIP / OOXML)
+    var files={
+      '[Content_Types].xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+</Types>`,
+      '_rels/.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`,
+      'word/_rels/document.xml.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`,
+      'word/document.xml': docXml,
+      'word/styles.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:docDefaults><w:rPrDefault><w:rPr>
+<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+<w:sz w:val="24"/><w:szCs w:val="24"/>
+<w:color w:val="000000"/>
+</w:rPr></w:rPrDefault></w:docDefaults>
+</w:styles>`,
+    };
 
-    var borda1={style:D.BorderStyle.SINGLE,size:4,color:'000000'};
-    var celBordas={top:borda1,bottom:borda1,left:borda1,right:borda1};
-    var cel=(children,opts={})=>new D.TableCell({children,borders:celBordas,verticalAlign:D.VerticalAlign.TOP,...opts});
-    var celC=(children,opts={})=>new D.TableCell({children,borders:celBordas,verticalAlign:D.VerticalAlign.CENTER,...opts});
-
-    var tableFull=rows=>new D.Table({rows,width:{size:100,type:D.WidthType.PERCENTAGE},layout:D.TableLayoutType.AUTOFIT});
-
-    var om=gv('c_om');
-
-    // ── CAPA ──────────────────────────────────────────
-    var capaParas=[
-      parC([runB('MINISTÉRIO DA DEFESA',11)]),
-      parC([runB('EXÉRCITO BRASILEIRO',11)]),
-      parC([runB(om,11)]),
-      blank(),
-    ];
-
-    // Tabela 1
-    capaParas.push(tableFull([
-      new D.TableRow({children:[cel([
-        par([runB('INTERESSADO: '),run(gv('c_omv'))]),
-        par([runB('SETOR REQUISITANTE: '),run(gv('c_setor'))]),
-        par([runB('PROCESSO: '),run(gv('c_nup'))]),
-      ])]}),
-      new D.TableRow({children:[cel([
-        par([runB('ASSUNTO: '),run(gv('c_assunto'))]),
-        par([runB('ANEXOS: '),run('DIEx Requisitório, Nota de Crédito, Certidões de regularidade fiscal e demais documentos necessários para o processo (SFC).')]),
-        par([runB('UG: '),run(gv('c_ug'))]),
-        par([runB('EMPENHO: '),run('2026NE____________     '),runB('DATA DO EMPENHO: '),run('_________')]),
-        par([runB('RESPONSÁVEL: '),run('___________________________')]),
-      ])]}),
-    ]));
-
-    capaParas.push(blank());
-
-    // Tabela 2 Destino/Data
-    var destRows=[new D.TableRow({children:[
-      celC([par([runB('DESTINO')],{alignment:D.AlignmentType.CENTER})],{width:{size:70,type:D.WidthType.PERCENTAGE}}),
-      celC([par([runB('DATA')],{alignment:D.AlignmentType.CENTER})]),
-    ]})];
-    for(var i=0;i<5;i++) destRows.push(new D.TableRow({height:{value:450,rule:D.HeightRule.EXACT},children:[
-      cel([par([run('')])]),cel([par([run('')])]),
-    ]}));
-    capaParas.push(tableFull(destRows));
-    capaParas.push(blank(),parC([runB('NATAL – RN')]),parC([runB('2026')]));
-
-    // ── DIEx ──────────────────────────────────────────
-    var diexParas=[
-      new D.Paragraph({pageBreakBefore:true,children:[],spacing:{after:0}}),
-      parC([runB('MINISTÉRIO DA DEFESA',11)]),
-      parC([runB('EXÉRCITO BRASILEIRO',11)]),
-      parC([runB(om,11)]),
-      blank(),
-      par([runB('DIEx Requisitório nº '),run(gv('d_diexnr'))]),
-      par([runB('EB: '),run(gv('d_nup'))]),
-      blank(),
-      parR([run('Natal-RN, '+fmtDateExt(document.getElementById('d_data').value)+'.')]),
-      blank(),
-      par([runB('Do '),run(gv('d_cargo')+' '+gv('d_omvdo'))]),
-      par([runB('Ao '),run('Ordenador de Despesa da B Adm Gu Natal')]),
-      par([runB('Assunto: '),run('requisição para empenho de '+gv('d_asstp'))]),
-      par([runB('Requisitante: '),run(gv('d_req'))]),
-      blank(),
-      parJ([runB('1. '),run('Nos termos do contido no documento acima referenciado, solicito providências junto ao Ordenador de Despesas, no sentido de aprovar a requisição de acordo com o que se segue:')]),
-      parJ([run('    a. Modalidade de licitação:')]),
-      parJ([run('    '+modalTxt())]),
-      blank(),
-      parJ([runB('2. '),run('Dados do fornecedor e especificações do item:')]),
-    ];
-
-    // Tabela fornecedor
-    var totalItens=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
-    var itemRows=itens.map(it=>new D.TableRow({children:[
-      celC([par([run(it.ord)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.item)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.si)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.desc)])]),
-      celC([par([run(it.und)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.qtd)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.unit)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run(it.rtotal)],{alignment:D.AlignmentType.CENTER})]),
-      celC([par([run('')])]),celC([par([run('')])]),celC([par([run('')])]),celC([par([run('')])]),
-    ]}));
-
-    var fornTable=tableFull([
-      new D.TableRow({children:[
-        celC([par([runB('RAZÃO SOCIAL',10)])]),
-        new D.TableCell({columnSpan:11,children:[par([run(gv('d_razao'),{size:SZ(10)})])],borders:celBordas}),
-      ]}),
-      new D.TableRow({children:[
-        celC([par([runB('CNPJ',10)])]),
-        new D.TableCell({columnSpan:11,children:[par([run(gv('d_cnpj'),{size:SZ(10)})])],borders:celBordas}),
-      ]}),
-      new D.TableRow({children:[
-        celC([par([runB('TIPO DE EMPENHO',10)])]),
-        new D.TableCell({columnSpan:11,children:[par([run(gv('d_tempenho'),{size:SZ(10)})])],borders:celBordas}),
-      ]}),
-      new D.TableRow({children:[
-        new D.TableCell({columnSpan:8,children:[par([runB('PREENCHIMENTO A CARGO DA OM',9)],{alignment:D.AlignmentType.CENTER})],borders:celBordas}),
-        new D.TableCell({columnSpan:4,children:[par([runB('RETIFICAÇÕES (SFC) - A CARGO DO EMPENHADOR',8)],{alignment:D.AlignmentType.CENTER})],borders:celBordas}),
-      ]}),
-      new D.TableRow({children:['ORD','ITEM','SI','DESCRIÇÃO','UND','QTD','R$ UNIT','R$ TOTAL','QTD','R$ TOTAL','RESP','RUBRICA'].map(h=>celC([par([runB(h,8)],{alignment:D.AlignmentType.CENTER})]))}),
-      ...itemRows,
-      new D.TableRow({children:[
-        new D.TableCell({columnSpan:7,children:[par([runB('TOTAL',10)])],borders:celBordas}),
-        celC([par([runB(fmtBRL(totalItens),10)])]),
-        celC([par([run('')])]),celC([par([run('')])]),celC([par([run('')])]),celC([par([run('')])]),
-      ]}),
-    ]);
-    diexParas.push(fornTable, blank());
-
-    // §3 §4 §5
-    diexParas.push(
-      parJ([runB('3. '),run('Justificativa para a aquisição/contratação:')]),
-      blank(),
-      parJ([run(document.getElementById('v_justif').value||'')]),
-      blank(),
-      parJ([runB('4. '),run('Confirmo que os quantitativos e/ou valores mínimos dos itens para empenho e os quantitativos por OM foram verificados e obedecidos')]),
-      blank(),
-      parJ([runB('5. '),run('Proposta de recurso:')]),
-    );
-
-    // Tabela NCs
-    var totalNc=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
-    var ncRows=ncs.map(nc=>new D.TableRow({children:['nc','esf','ptres','fonte','nd','ugr','pi','valor'].map(k=>celC([par([run(nc[k],{size:SZ(10)})])]),{borders:celBordas})}));
-    var ncTable=tableFull([
-      new D.TableRow({children:['NC','ESF','PTRES','FONTE','ND','UGR','PI','VALOR'].map(h=>celC([par([runB(h,10)],{alignment:D.AlignmentType.CENTER})]))}),
-      ...ncRows,
-      new D.TableRow({children:[
-        new D.TableCell({columnSpan:7,children:[par([runB('TOTAL',10)])],borders:celBordas}),
-        celC([par([runB(fmtBRL(totalNc),10)])]),
-      ]}),
-    ]);
-    diexParas.push(ncTable, blank());
-
-    diexParas.push(
-      parJ([runB('6. '),run('Nos termos contidos na Lei 14.133/21, solicito providências junto ao Ordenador de Despesas da Base Administrativa desta Guarnição no sentido de aprovar a presente requisição.')]),
-      blank(),blank(),blank(),
-      parC([runB(gv('a_req_nome')+' – '+gv('a_req_posto'))]),
-      parC([run(gv('a_req_func'))]),
-      blank(),
-    );
-
-    // Tabela despachos
-    function despCel(titulo, nome, posto, func){
-      return cel([
-        par([runB(titulo,10)]),
-        par([run('(    ) Sou de parecer FAVORÁVEL à aquisição do material / serviço requisitado.',{size:SZ(10)})]),
-        par([run('(    ) Sou de parecer DESFAVORÁVEL à aquisição do material / serviço requisitado, tendo em vista:',{size:SZ(10)})]),
-        par([run('________________________________________________________________',{size:SZ(10)})]),
-        par([run('________________________________________________________________',{size:SZ(10)})]),
-        par([run('Natal - RN, _____ / _____ / 2026.',{size:SZ(10)})]),
-        blank(),blank(),
-        par([runB(nome+' – '+posto,10)]),
-        par([run(func,{size:SZ(10)})]),
-      ]);
-    }
-    diexParas.push(tableFull([new D.TableRow({children:[
-      despCel('DESPACHO DO FISCAL ADMINISTRATIVO DA OM',gv('a_fisc_nome'),gv('a_fisc_posto'),'Fisc Adm OMV'),
-      despCel('DESPACHO DO CMT OM',gv('a_cmt_nome'),gv('a_cmt_posto'),'Cmt da OMV'),
-    ]})]));
-    diexParas.push(blank());
-
-    // Despacho OD
-    diexParas.push(tableFull([new D.TableRow({children:[cel([
-      par([run('(   ) DEFIRO: 1. Ordeno a aquisição do material/serviço requisitado; 2. A SALC emita Nota de Empenho, submetendo-a a este OD posteriormente. (   ) INDEFIRO, tendo em vista:',{size:SZ(10)})]),
-      par([run('__________________________________________________________________________________________',{size:SZ(10)})]),
-      par([run('__________________________________________________________________________________________',{size:SZ(10)})]),
-      par([run('(   ) O requisitante promova as alterações indicadas; (   ) Arquive-se.',{size:SZ(10)})]),
-      par([run('Natal - RN, _____ / _____ / 2026.',{size:SZ(10)})]),
-      blank(),blank(),
-      par([runB('FERNANDO TEODORO COELHO DE ARAÚJO JÚNIOR - Cel',10)]),
-      par([run('OD Base Adm Gu N',{size:SZ(10)})]),
-    ])]})]));
-
-    // ── BLOCO NE ──────────────────────────────────────
-    var neDesc=document.getElementById('ne_resultado').textContent;
-    var neParas=[
-      new D.Paragraph({pageBreakBefore:true,children:[],spacing:{after:0}}),
-      parC([runB('MINISTÉRIO DA DEFESA',11)]),
-      parC([runB('EXÉRCITO BRASILEIRO',11)]),
-      parC([runB(om,11)]),
-      blank(),
-      parC([runB('DESCRIÇÃO DA NOTA DE EMPENHO')]),
-      blank(),
-      tableFull([
-        new D.TableRow({children:[cel([parC([runB('DESCRIÇÃO PARA A NOTA DE EMPENHO (NE)',11)])],{shading:{fill:'E8EEF8'}})]}),
-        new D.TableRow({children:[cel([par([run(neDesc)])],{})]}),
-      ]),
-      blank(),
-      parJ([runB('INSTRUÇÕES: ',10),run('Copie o texto acima e cole no campo "Descrição" da Nota de Empenho no sistema SIAFI.',{size:SZ(10)})]),
-    ];
-
-    // ── MONTAR DOCUMENTO ──────────────────────────────
-    var doc=new D.Document({
-      sections:[{
-        properties:{page:{margin:{top:1134,bottom:1134,left:1134,right:1134}}},
-        children:[...capaParas,...diexParas,...neParas],
-      }],
-    });
-
-    var blob=await D.Packer.toBlob(doc);
+    // Empacotar como ZIP usando JSZip embutido
+    var zip=new MiniZip();
+    Object.entries(files).forEach(([name,content])=>zip.addFile(name,content));
+    var blob=zip.toBlob();
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
-    a.href=url; a.download='Requisitoria_B_Adm_Gu_Natal.docx';
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    a.href=url;a.download='Requisitoria_B_Adm_Gu_Natal.docx';
+    document.body.appendChild(a);a.click();
+    document.body.removeChild(a);URL.revokeObjectURL(url);
     setStatus('✅ DOCX gerado e baixado com sucesso!',true);
   }catch(err){
     console.error(err);
-    setStatus('❌ Erro ao gerar DOCX: '+err.message,false);
+    setStatus('❌ Erro: '+err.message,false);
   }finally{
-    btn.textContent='📄 Gerar DOCX (Word)'; btn.disabled=false;
+    btn.textContent='📄 Gerar DOCX (Word)';btn.disabled=false;
+  }
+}
+
+// ── MiniZip: empacotador ZIP puro em JS ─────────────────────
+// Implementação simplificada de ZIP sem compressão (STORE)
+function MiniZip(){
+  this.files=[];
+  this.addFile=function(name,content){
+    var bytes=strToBytes(content);
+    this.files.push({name:name,bytes:bytes});
+  };
+  this.toBlob=function(){
+    var parts=[],centralDir=[],offset=0;
+    this.files.forEach(f=>{
+      var nameBytes=strToBytes(f.name);
+      var crc=crc32(f.bytes);
+      var lh=localHeader(nameBytes,f.bytes.length,crc);
+      parts.push(lh);parts.push(f.bytes);
+      centralDir.push(centralHeader(nameBytes,f.bytes.length,crc,offset));
+      offset+=lh.length+f.bytes.length;
+    });
+    var cdSize=centralDir.reduce((a,b)=>a+b.length,0);
+    var eocd=endOfCentralDir(this.files.length,cdSize,offset);
+    var all=[...parts,...centralDir,eocd];
+    var total=all.reduce((a,b)=>a+b.length,0);
+    var buf=new Uint8Array(total);
+    var pos=0;
+    all.forEach(arr=>{buf.set(arr,pos);pos+=arr.length;});
+    return new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  };
+  function strToBytes(s){
+    var enc=new TextEncoder();return enc.encode(s);
+  }
+  function u16(n){return new Uint8Array([n&0xff,(n>>8)&0xff]);}
+  function u32(n){return new Uint8Array([n&0xff,(n>>8)&0xff,(n>>16)&0xff,(n>>24)&0xff]);}
+  function concat(){
+    var total=0;for(var i=0;i<arguments.length;i++)total+=arguments[i].length;
+    var r=new Uint8Array(total),pos=0;
+    for(var i=0;i<arguments.length;i++){r.set(arguments[i],pos);pos+=arguments[i].length;}
+    return r;
+  }
+  function localHeader(nameBytes,size,crc){
+    return concat(
+      new Uint8Array([0x50,0x4b,0x03,0x04]),// sig
+      u16(20),u16(0),u16(0),// version, flags, method(STORE)
+      u16(0),u16(0),// mod time, mod date
+      u32(crc),u32(size),u32(size),
+      u16(nameBytes.length),u16(0),
+      nameBytes
+    );
+  }
+  function centralHeader(nameBytes,size,crc,offset){
+    return concat(
+      new Uint8Array([0x50,0x4b,0x01,0x02]),// sig
+      u16(20),u16(20),u16(0),u16(0),
+      u16(0),u16(0),// mod time, mod date
+      u32(crc),u32(size),u32(size),
+      u16(nameBytes.length),u16(0),u16(0),
+      u16(0),u16(0),u32(0),u32(offset),
+      nameBytes
+    );
+  }
+  function endOfCentralDir(count,cdSize,cdOffset){
+    return concat(
+      new Uint8Array([0x50,0x4b,0x05,0x06]),// sig
+      u16(0),u16(0),
+      u16(count),u16(count),
+      u32(cdSize),u32(cdOffset),
+      u16(0)
+    );
+  }
+  function crc32(bytes){
+    var table=crc32.table||(crc32.table=(function(){
+      var t=new Uint32Array(256);
+      for(var i=0;i<256;i++){var c=i;for(var j=0;j<8;j++)c=c&1?(0xedb88320^(c>>>1)):c>>>1;t[i]=c;}
+      return t;
+    })());
+    var crc=0xffffffff;
+    for(var i=0;i<bytes.length;i++)crc=(crc>>>8)^table[(crc^bytes[i])&0xff];
+    return (crc^0xffffffff)>>>0;
   }
 }
 
 // INIT
 document.getElementById('d_data').value=new Date().toISOString().slice(0,10);
 atualizarNE();
-
-// Verifica se a biblioteca docx carregou
-window.addEventListener('load', function(){
-  var D = (typeof docx !== 'undefined') ? docx : (typeof window.docx !== 'undefined') ? window.docx : null;
-  if(!D){
-    var btn=document.getElementById('btn_gerar');
-    btn.textContent='⚠ Sem conexão – DOCX indisponível';
-    btn.disabled=true;
-    btn.style.background='#b91c1c';
-    setStatus('⚠ A biblioteca de geração DOCX não carregou. Verifique sua conexão com a internet.',false);
-  }
-});
 </script>
 </body>
 </html>
