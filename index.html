@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gerador de Requisitórias – B Adm Gu Natal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#eef1f7;color:#1a1a2e;min-height:100vh}
+:root{--hd:#0d2b6b;--hd2:#1a3d8f;--green:#15803d;--red:#dc2626;--bg:#f5f7fb;--card:#fff;--border:#c8d0e0;--accent:#e8eef8}
+
+/* HEADER */
+header{background:var(--hd);color:#fff;padding:14px 24px}
+header h1{font-size:17px;font-weight:700;letter-spacing:.3px}
+header p{font-size:11px;color:#aac4ff;margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;flex-wrap:wrap;gap:3px;padding:10px 16px 0;background:#dde4f2}
+.tab{padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;background:#b8c8e8;color:var(--hd);transition:.15s}
+.tab.active{background:#fff;border-color:var(--border);color:var(--hd);margin-bottom:-1px;z-index:2}
+.tab:hover:not(.active){background:#d0daee}
+
+/* PANEL */
+.panel-wrap{background:#fff;border:1px solid var(--border);border-radius:0 6px 6px 6px;margin:0 16px;padding:20px;min-height:320px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* SECTION HEADER */
+.sec-hd{background:var(--hd);color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:4px;margin:0 0 12px;letter-spacing:.5px}
+
+/* FORM ROWS */
+.frow{display:grid;grid-template-columns:200px 1fr;gap:6px;align-items:center;margin-bottom:8px}
+.frow label{font-size:13px;font-weight:600;color:#374151}
+.frow .hint{font-size:10px;color:#888;grid-column:2}
+input[type=text],input[type=date],select,textarea{width:100%;border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-size:13px;font-family:Arial,sans-serif;background:#fff;color:#1a1a2e;outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--hd);box-shadow:0 0 0 2px #1a3d8f22}
+.readonly-inp{background:#eef3ff!important;color:#374151}
+textarea{resize:vertical;line-height:1.6}
+
+/* BUTTONS */
+.btn{padding:7px 16px;font-size:13px;font-weight:700;border:none;border-radius:5px;cursor:pointer;transition:.15s}
+.btn-blue{background:var(--hd);color:#fff}.btn-blue:hover{background:var(--hd2)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#166534}
+.btn-red{background:var(--red);color:#fff;font-size:11px;padding:4px 10px}.btn-red:hover{background:#b91c1c}
+.btn-gray{background:#4b5563;color:#fff}.btn-gray:hover{background:#374151}
+.btn-copy{background:#15803d;color:#fff;padding:9px 20px;font-size:13px;border:none;border-radius:5px;cursor:pointer;font-weight:700;margin-top:10px}
+
+/* ITEM TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.tbl th{background:#e8eef8;padding:4px 6px;border:1px solid var(--border);text-align:center;font-weight:700;font-size:11px}
+.tbl td{padding:4px 6px;border:1px solid var(--border);vertical-align:middle}
+.tbl tr:nth-child(even) td{background:#f9fafb}
+
+/* ITEM INPUT GRID */
+.item-grid{display:grid;grid-template-columns:50px 55px 45px 1fr 55px 75px 85px 85px 40px;gap:4px;align-items:center;margin-bottom:6px}
+.item-grid label{font-size:10px;font-weight:700;text-align:center;color:#555}
+.nc-grid{display:grid;grid-template-columns:1fr .4fr .7fr 1.1fr .7fr .7fr 1.1fr .8fr 40px;gap:4px;align-items:center;margin-bottom:6px}
+
+/* TOTAL BADGE */
+.total-badge{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:5px 14px;font-size:13px;font-weight:700;color:#1e40af;margin-top:6px}
+
+/* NE RESULT */
+.ne-box{background:#fffbeb;border:2px solid #f59e0b;border-radius:6px;padding:14px 16px;font-size:14px;font-weight:700;color:#1e3a8a;word-break:break-word;min-height:54px;margin:10px 0}
+.ne-field{background:#eef3ff;border:1px solid var(--border);border-radius:5px;padding:5px 9px;font-size:12px;color:#374151;margin-bottom:6px}
+.ne-lbl{font-size:11px;color:#6b7280;margin-bottom:2px}
+
+/* INFO BOX */
+.info-box{background:#e8eef8;border-left:3px solid var(--hd);border-radius:4px;padding:8px 12px;font-size:12px;color:#374151;margin-bottom:12px;line-height:1.5}
+
+/* MODAL TEXT */
+.modal-preview{background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:8px 12px;font-size:12px;color:#1e3a8a;font-style:italic;margin-top:8px;min-height:24px}
+
+/* BOTTOM BAR */
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#e8eef8;border-top:1px solid var(--border);margin:0 0 8px}
+#status{font-size:12px;color:var(--green);font-weight:600}
+
+/* DESPACHO */
+.desp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.desp-box{border:1px solid var(--border);border-radius:5px;padding:10px;background:var(--bg)}
+.desp-box .desp-hd{font-size:11px;font-weight:700;color:var(--hd);margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚔ GERADOR DE REQUISITÓRIAS — B Adm Gu Natal</h1>
+  <p>Sistema Integrado · Capa + DIEx Requisitório + Descrição NE</p>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab(0)">📋 Capa</div>
+  <div class="tab" onclick="showTab(1)">📄 Cabeçalho DIEx</div>
+  <div class="tab" onclick="showTab(2)">⚖ Modalidade</div>
+  <div class="tab" onclick="showTab(3)">🏢 Fornecedor/Itens</div>
+  <div class="tab" onclick="showTab(4)">📝 Justificativa</div>
+  <div class="tab" onclick="showTab(5)">💰 Prop. Recurso</div>
+  <div class="tab" onclick="showTab(6)">✍ Assinaturas</div>
+  <div class="tab" onclick="showTab(7)">🗒 Descrição NE</div>
+</div>
+
+<div class="panel-wrap">
+
+<!-- 0: CAPA -->
+<div class="tab-panel active" id="panel-0">
+  <div class="sec-hd">DADOS DA CAPA REQUISITÓRIA</div>
+  <div class="frow"><label>Nome da OM:</label>
+    <select id="c_om" onchange="syncOM();atualizarNE()">
+      <option value="">— selecione —</option>
+      <option>BASE ADMINISTRATIVA DA GUARNIÇÃO DE NATAL</option>
+      <option>16º BATALHÃO DE INFANTARIA MOTORIZADO</option>
+      <option>17º GRUPO DE ARTILHARIA DE CAMPANHA</option>
+      <option>7ª BRIGADA DE INFANTARIA MOTORIZADA</option>
+    </select>
+  </div>
+  <div class="frow"><label>Interessado (OMV):</label>
+    <select id="c_omv">
+      <option value="">— selecione —</option>
+      <option>16º BI Mtz</option><option>17º GAC</option><option>7ª Bda Inf Mtz</option>
+      <option>Cia C 7ª Bda Inf Mtz</option><option>7º Pel PE</option>
+      <option>7ª Cia Com</option><option>B Adm Gu Natal</option><option>Div Ap</option>
+    </select>
+  </div>
+  <div class="frow"><label>Setor Requisitante:</label>
+    <input type="text" id="c_setor" placeholder="ex.: Almoxarifado, SFPC, Aprov..." oninput="syncSetor();atualizarNE()"/>
+  </div>
+  <div class="frow"><label>NUP (Processo):</label>
+    <input type="text" id="c_nup" placeholder="ex.: 64418.000001/2026-00" oninput="syncNUP()"/>
+  </div>
+  <div class="frow"><label>Assunto:</label>
+    <input type="text" id="c_assunto" placeholder="Descreva o que está sendo adquirido/contratado" oninput="atualizarNE()"/>
+  </div>
+  <div class="frow"><label>UG:</label>
+    <select id="c_ug"><option value="">— selecione —</option><option>PRIMÁRIA</option><option>SECUNDÁRIA</option></select>
+  </div>
+</div>
+
+<!-- 1: CABEÇALHO -->
+<div class="tab-panel" id="panel-1">
+  <div class="sec-hd">CABEÇALHO DO DIEx REQUISITÓRIO</div>
+  <div class="frow"><label>DIEx nº:</label>
+    <input type="text" id="d_diexnr" placeholder="0001 / 2026 – Almox 16º BI Mtz" oninput="atualizarNE()"/>
+  </div>
+  <div class="frow"><label>EB (NUP):</label>
+    <input type="text" id="d_nup" class="readonly-inp" placeholder="preenchido da Capa" readonly/>
+  </div>
+  <div class="frow hint-row"><label></label><span class="hint">Preenchido automaticamente a partir do NUP da Capa</span></div>
+  <div class="frow"><label>Data:</label>
+    <input type="date" id="d_data" oninput="atualizarNE()" style="width:200px"/>
+  </div>
+  <div class="frow"><label>Cargo (Do):</label>
+    <select id="d_cargo">
+      <option value="">— selecione —</option>
+      <option>Comandante</option><option>Chefe do Estado-Maior</option><option>Chefe</option>
+    </select>
+  </div>
+  <div class="frow"><label>OMV (Do):</label>
+    <select id="d_omvdo">
+      <option value="">— selecione —</option>
+      <option>16º BI Mtz</option><option>17º GAC</option><option>7ª Bda Inf Mtz</option>
+      <option>Cia C 7ª Bda Inf Mtz</option><option>7º Pel PE</option>
+      <option>7ª Cia Com</option><option>B Adm Gu Natal</option><option>Div Ap</option>
+    </select>
+  </div>
+  <div class="frow"><label>Tipo de Assunto:</label>
+    <select id="d_asstp">
+      <option value="">— selecione —</option>
+      <option>passagens</option><option>diárias</option>
+      <option>aquisição de material</option><option>contratação de serviço</option>
+    </select>
+  </div>
+  <div class="frow"><label>Requisitante:</label>
+    <input type="text" id="d_req" class="readonly-inp" placeholder="preenchido do Setor Requisitante da Capa"/>
+  </div>
+  <div class="frow"><label></label><span class="hint">Preenchido automaticamente a partir do Setor Requisitante da Capa</span></div>
+</div>
+
+<!-- 2: MODALIDADE -->
+<div class="tab-panel" id="panel-2">
+  <div class="sec-hd">§1 – MODALIDADE DE LICITAÇÃO</div>
+  <div class="frow"><label>Modalidade:</label>
+    <select id="modal_tipo" onchange="renderModalFields();atualizarNE()">
+      <option value="">— selecione —</option>
+      <option>Pregão UGG</option><option>Pregão UGP</option><option>Pregão UGNP</option>
+      <option>Dispensa de Licitação</option><option>Inexigibilidade de Licitação</option>
+      <option>Contrato</option><option>Reforçar NE</option>
+    </select>
+  </div>
+  <div id="modal_fields" style="margin-top:8px"></div>
+  <div class="modal-preview" id="modal_preview">Selecione uma modalidade para ver o texto gerado.</div>
+</div>
+
+<!-- 3: FORNECEDOR/ITENS -->
+<div class="tab-panel" id="panel-3">
+  <div class="sec-hd">§2 – DADOS DO FORNECEDOR</div>
+  <div class="frow"><label>Razão Social:</label><input type="text" id="d_razao"/></div>
+  <div class="frow"><label>CNPJ:</label><input type="text" id="d_cnpj" placeholder="XX.XXX.XXX/XXXX-XX"/></div>
+  <div class="frow"><label>Tipo de Empenho:</label>
+    <select id="d_tempenho">
+      <option value="">— selecione —</option>
+      <option>GLOBAL</option><option>ESTIMATIVO</option><option>ORDINÁRIO</option>
+    </select>
+  </div>
+  <div class="sec-hd" style="margin-top:14px">ITENS DO EMPENHO</div>
+  <div class="item-grid" style="margin-bottom:2px">
+    <label>ORD</label><label>ITEM</label><label>SI</label><label>DESCRIÇÃO</label>
+    <label>UND</label><label>QTD</label><label>R$ UNIT</label><label>R$ TOTAL</label><label></label>
+  </div>
+  <div class="item-grid" id="item_inputs">
+    <input type="text" id="i_ord" style="text-align:center"/>
+    <input type="text" id="i_item" style="text-align:center"/>
+    <input type="text" id="i_si" style="text-align:center"/>
+    <input type="text" id="i_desc"/>
+    <input type="text" id="i_und" style="text-align:center"/>
+    <input type="text" id="i_qtd" style="text-align:center" oninput="calcRtotal()"/>
+    <input type="text" id="i_unit" style="text-align:center" oninput="calcRtotal()"/>
+    <input type="text" id="i_rtotal" class="readonly-inp" readonly style="text-align:right;font-weight:700"/>
+    <button class="btn btn-green" onclick="addItem()" title="Incluir item" style="padding:6px 0;font-size:16px">+</button>
+  </div>
+  <table class="tbl" id="item_table">
+    <thead><tr>
+      <th>ORD</th><th>ITEM</th><th>SI</th><th style="min-width:140px">DESCRIÇÃO</th>
+      <th>UND</th><th>QTD</th><th>R$ UNIT</th><th>R$ TOTAL</th><th></th>
+    </tr></thead>
+    <tbody id="item_tbody"></tbody>
+    <tfoot id="item_tfoot" style="display:none">
+      <tr><td colspan="7" style="font-weight:700;text-align:right;background:#e8eef8">TOTAL</td>
+      <td id="item_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- 4: JUSTIFICATIVA -->
+<div class="tab-panel" id="panel-4">
+  <div class="sec-hd">§3 – JUSTIFICATIVA</div>
+  <p style="font-size:12px;color:#555;margin-bottom:8px">Descreva a necessidade, objetivo PEO e previsão no PCA.</p>
+  <textarea id="v_justif" rows="12" placeholder="Justifique a necessidade da aquisição ou contratação..."></textarea>
+</div>
+
+<!-- 5: PROP. RECURSO -->
+<div class="tab-panel" id="panel-5">
+  <div class="sec-hd">§5 – PROPOSTA DE RECURSO (NOTAS DE CRÉDITO)</div>
+  <div class="nc-grid" style="margin-bottom:2px">
+    <label style="font-size:10px;font-weight:700;color:#555">NC</label>
+    <label style="font-size:10px;font-weight:700;color:#555">ESF</label>
+    <label style="font-size:10px;font-weight:700;color:#555">PTRES</label>
+    <label style="font-size:10px;font-weight:700;color:#555">FONTE</label>
+    <label style="font-size:10px;font-weight:700;color:#555">ND</label>
+    <label style="font-size:10px;font-weight:700;color:#555">UGR</label>
+    <label style="font-size:10px;font-weight:700;color:#555">PI</label>
+    <label style="font-size:10px;font-weight:700;color:#555">VALOR</label>
+    <label></label>
+  </div>
+  <div class="nc-grid">
+    <input type="text" id="n_nc"/><input type="text" id="n_esf"/>
+    <input type="text" id="n_ptres"/><input type="text" id="n_fonte"/>
+    <input type="text" id="n_nd"/><input type="text" id="n_ugr"/>
+    <input type="text" id="n_pi"/><input type="text" id="n_valor"/>
+    <button class="btn btn-blue" onclick="addNC()" style="padding:6px 0;font-size:16px">+</button>
+  </div>
+  <table class="tbl" id="nc_table">
+    <thead><tr>
+      <th>NC</th><th>ESF</th><th>PTRES</th><th>FONTE</th>
+      <th>ND</th><th>UGR</th><th>PI</th><th>VALOR</th><th></th>
+    </tr></thead>
+    <tbody id="nc_tbody"></tbody>
+    <tfoot id="nc_tfoot" style="display:none">
+      <tr><td colspan="7" style="font-weight:700;text-align:right;background:#e8eef8">TOTAL</td>
+      <td id="nc_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- 6: ASSINATURAS -->
+<div class="tab-panel" id="panel-6">
+  <div class="sec-hd">ASSINATURA DO REQUISITANTE</div>
+  <div class="frow"><label>Nome completo:</label><input type="text" id="a_req_nome"/></div>
+  <div class="frow"><label>Posto/Graduação:</label><input type="text" id="a_req_posto"/></div>
+  <div class="frow"><label>Função:</label>
+    <input type="text" id="a_req_func" placeholder="ex.: Chefe do Aprovisionamento do 17º GAC"/>
+  </div>
+  <div class="sec-hd" style="margin-top:14px">FISCAL ADMINISTRATIVO DA OMV</div>
+  <div class="frow"><label>Nome completo:</label><input type="text" id="a_fisc_nome"/></div>
+  <div class="frow"><label>Posto:</label><input type="text" id="a_fisc_posto"/></div>
+  <div class="sec-hd" style="margin-top:14px">COMANDANTE DA OMV</div>
+  <div class="frow"><label>Nome completo:</label><input type="text" id="a_cmt_nome"/></div>
+  <div class="frow"><label>Posto:</label><input type="text" id="a_cmt_posto"/></div>
+</div>
+
+<!-- 7: DESCRIÇÃO NE -->
+<div class="tab-panel" id="panel-7">
+  <div class="sec-hd">🗒 BLOCO 3 – DESCRIÇÃO DA NOTA DE EMPENHO (NE)</div>
+  <div class="frow">
+    <label>OMV (sigla NE):</label>
+    <select id="ne_omv" onchange="atualizarNE()" style="max-width:260px">
+      <option value="">— selecione —</option>
+      <option>BADMGUNATAL</option><option>16BIMTZ</option><option>17GAC</option>
+      <option>CMDO7BDAINFMTZ</option><option>CIAC7BDAINFMTZ</option>
+      <option>7PELPE</option><option>7CIACOM</option>
+    </select>
+  </div>
+  <div class="info-box" style="margin-top:10px">
+    Os campos abaixo são preenchidos automaticamente a partir das outras abas. Selecione a OMV acima e confira o resultado.
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div>
+      <div class="ne-lbl">NC (extraído de Prop. Recurso)</div>
+      <div class="ne-field" id="nf_nc">—</div>
+    </div>
+    <div>
+      <div class="ne-lbl">Assunto (extraído da Capa)</div>
+      <div class="ne-field" id="nf_assunto">—</div>
+    </div>
+    <div>
+      <div class="ne-lbl">DIEx nº (extraído do Cabeçalho)</div>
+      <div class="ne-field" id="nf_diex">—</div>
+    </div>
+    <div>
+      <div class="ne-lbl">Data (extraído do Cabeçalho)</div>
+      <div class="ne-field" id="nf_data">—</div>
+    </div>
+    <div style="grid-column:1/-1">
+      <div class="ne-lbl">Modalidade (extraído de Modalidade)</div>
+      <div class="ne-field" id="nf_modal">—</div>
+    </div>
+  </div>
+  <div class="sec-hd">DESCRIÇÃO GERADA</div>
+  <div class="ne-box" id="ne_resultado">Preencha os campos nas outras abas para gerar a descrição.</div>
+  <button class="btn-copy" onclick="copiarNE()">📋 Copiar Descrição</button>
+  <p style="font-size:11px;color:#888;margin-top:8px;font-style:italic">
+    Cole este texto diretamente no campo Descrição da NE no SIAFI.
+  </p>
+</div>
+
+</div><!-- end panel-wrap -->
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <span id="status"></span>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-gray" onclick="limparTudo()">🗑 Limpar tudo</button>
+    <button class="btn btn-blue" onclick="gerarDocumento()">📄 Gerar Documento (Word)</button>
+  </div>
+</div>
+
+<script>
+// ── STATE ───────────────────────────────────────────────────
+var itens = [], ncs = [];
+
+// ── TABS ────────────────────────────────────────────────────
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(i===7) atualizarNE();
+}
+
+// ── SYNC Capa → DIEx ────────────────────────────────────────
+function syncNUP(){ document.getElementById('d_nup').value = document.getElementById('c_nup').value; }
+function syncSetor(){ document.getElementById('d_req').value = document.getElementById('c_setor').value; }
+function syncOM(){ atualizarNE(); }
+
+// ── MODAL ───────────────────────────────────────────────────
+function renderModalFields(){
+  var m = document.getElementById('modal_tipo').value;
+  var f = document.getElementById('modal_fields');
+  f.innerHTML = '';
+  if(!m){document.getElementById('modal_preview').textContent='Selecione uma modalidade.';return;}
+
+  function row(lbl,id,hint){
+    var d=document.createElement('div'); d.className='frow';
+    d.innerHTML='<label>'+lbl+'</label><input type="text" id="'+id+'" oninput="previewModal();atualizarNE()" placeholder="'+(hint||'')+'"/>';
+    f.appendChild(d);
+  }
+  function rowDate(lbl,id){
+    var d=document.createElement('div'); d.className='frow';
+    d.innerHTML='<label>'+lbl+'</label><input type="date" id="'+id+'" oninput="previewModal();atualizarNE()" style="width:200px"/>';
+    f.appendChild(d);
+  }
+  function rowSel(lbl,id,opts){
+    var d=document.createElement('div'); d.className='frow';
+    var ops=opts.map(o=>'<option>'+o+'</option>').join('');
+    d.innerHTML='<label>'+lbl+'</label><select id="'+id+'" onchange="previewModal();atualizarNE()" style="max-width:140px">'+ops+'</select>';
+    f.appendChild(d);
+  }
+
+  if(m==='Pregão UGG'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');rowDate('Vigência:','m_vig');}
+  else if(m==='Pregão UGP'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');row('Sigla/UASG:','m_uasg','ex.: H Gu N / 160343');rowDate('Vigência:','m_vig');}
+  else if(m==='Pregão UGNP'){row('Nº do Pregão:','m_nr','ex.: 9001 / 2026');row('Sigla/UASG:','m_uasg','ex.: H Gu N / 160343');}
+  else if(m==='Dispensa de Licitação'||m==='Inexigibilidade de Licitação'){row('Nº:','m_nr','ex.: 0001 / 2026');}
+  else if(m==='Contrato'){row('Nº do Contrato:','m_nr','ex.: 0001 / 2026');rowSel('Aditivo:','m_aditivo',['0','1','2','3','4','5']);rowDate('Vigência:','m_vig');}
+  else if(m==='Reforçar NE'){row('Nº da NE:','m_nr','ex.: 2026NE00001');}
+
+  previewModal();
+}
+
+function gv(id){ var e=document.getElementById(id); return e?e.value.trim():''; }
+function fmtDate(v){ if(!v)return''; var p=v.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+function fmtDateExt(v){ if(!v)return''; var p=v.split('-'); return parseInt(p[2])+' de '+MESES[parseInt(p[1])-1]+' de '+p[0]; }
+
+function modalTxt(){
+  var m=gv('modal_tipo'), nr=gv('m_nr')||'';
+  var vig=fmtDate(gv('m_vig')), uasg=gv('m_uasg')||'';
+  if(m==='Pregão UGG')     return 'Pregão UGG – Pregão nº '+nr+' - B Adm Gu Natal - Vigência: '+vig+'.';
+  if(m==='Pregão UGP')     return 'Pregão UGP – Pregão nº '+nr+' – '+uasg+' - Vigência: '+vig+'.';
+  if(m==='Pregão UGNP')    return 'Pregão UGNP – Pregão nº '+nr+' – '+uasg+'.';
+  if(m==='Dispensa de Licitação') return 'Dispensa de Licitação nº '+nr+' – B Adm Gu Natal.';
+  if(m==='Inexigibilidade de Licitação') return 'Inexigibilidade de Licitação nº '+nr+' – B Adm Gu Natal.';
+  if(m==='Contrato'){var ad=gv('m_aditivo'); return 'Contrato nº '+nr+' – Aditivo: '+ad+' – Vigência: '+vig+'.';}
+  if(m==='Reforçar NE')    return 'Reforçar a Nota de Empenho '+nr+'.';
+  return '';
+}
+function modalNeTxt(){
+  var m=gv('modal_tipo'), nr=gv('m_nr')||'';
+  if(m==='Pregão UGG')     return 'Pregão UGG Nº '+nr;
+  if(m==='Pregão UGP')     return 'Pregão UGP Nº '+nr;
+  if(m==='Pregão UGNP')    return 'Pregão UGNP Nº '+nr;
+  if(m==='Dispensa de Licitação') return 'Dispensa de Licitação Nº '+nr;
+  if(m==='Inexigibilidade de Licitação') return 'Inexigibilidade de Licitação Nº '+nr;
+  if(m==='Contrato')       return 'Contrato Nº '+nr;
+  if(m==='Reforçar NE')    return 'Reforçar NE '+nr;
+  return '';
+}
+function previewModal(){
+  var t=modalTxt();
+  document.getElementById('modal_preview').textContent = t||'Preencha os campos da modalidade.';
+  atualizarNE();
+}
+
+// ── ITENS ───────────────────────────────────────────────────
+function calcRtotal(){
+  var q=parseFloat(gv('i_qtd').replace(',','.'))||0;
+  var u=parseFloat(gv('i_unit').replace(',','.'))||0;
+  document.getElementById('i_rtotal').value = fmtBRL(q*u);
+}
+function fmtBRL(v){
+  return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function parseNum(s){
+  return parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0;
+}
+function addItem(){
+  var q=parseFloat(gv('i_qtd').replace(',','.'))||0;
+  var u=parseFloat(gv('i_unit').replace(',','.'))||0;
+  var rt=fmtBRL(q*u);
+  var it={ord:gv('i_ord'),item:gv('i_item'),si:gv('i_si'),desc:gv('i_desc'),
+          und:gv('i_und'),qtd:gv('i_qtd'),unit:gv('i_unit'),rtotal:rt};
+  if(!it.desc){alert('Informe a descrição do item.');return;}
+  itens.push(it);
+  renderItens();
+  ['i_ord','i_item','i_si','i_desc','i_und','i_qtd','i_unit','i_rtotal'].forEach(id=>document.getElementById(id).value='');
+}
+function remItem(i){ itens.splice(i,1); renderItens(); }
+function renderItens(){
+  var tb=document.getElementById('item_tbody');
+  tb.innerHTML=itens.map((it,i)=>'<tr><td style="text-align:center">'+it.ord+'</td><td style="text-align:center">'+it.item+'</td><td style="text-align:center">'+it.si+'</td><td>'+it.desc+'</td><td style="text-align:center">'+it.und+'</td><td style="text-align:center">'+it.qtd+'</td><td style="text-align:right">'+it.unit+'</td><td style="text-align:right;font-weight:700">'+it.rtotal+'</td><td style="text-align:center"><button class="btn btn-red" onclick="remItem('+i+')">✕</button></td></tr>').join('');
+  var total=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
+  var tf=document.getElementById('item_tfoot');
+  tf.style.display=itens.length?'':'none';
+  document.getElementById('item_total').textContent=fmtBRL(total);
+}
+
+// ── NCs ─────────────────────────────────────────────────────
+function addNC(){
+  var nc={nc:gv('n_nc'),esf:gv('n_esf'),ptres:gv('n_ptres'),fonte:gv('n_fonte'),
+          nd:gv('n_nd'),ugr:gv('n_ugr'),pi:gv('n_pi'),valor:gv('n_valor')};
+  if(!nc.nc){alert('Informe o número da NC.');return;}
+  ncs.push(nc);
+  renderNCs();
+  ['n_nc','n_esf','n_ptres','n_fonte','n_nd','n_ugr','n_pi','n_valor'].forEach(id=>document.getElementById(id).value='');
+  atualizarNE();
+}
+function remNC(i){ ncs.splice(i,1); renderNCs(); atualizarNE(); }
+function renderNCs(){
+  var tb=document.getElementById('nc_tbody');
+  tb.innerHTML=ncs.map((nc,i)=>'<tr><td>'+nc.nc+'</td><td>'+nc.esf+'</td><td>'+nc.ptres+'</td><td>'+nc.fonte+'</td><td>'+nc.nd+'</td><td>'+nc.ugr+'</td><td>'+nc.pi+'</td><td style="text-align:right">'+nc.valor+'</td><td style="text-align:center"><button class="btn btn-red" onclick="remNC('+i+')">✕</button></td></tr>').join('');
+  var total=ncs.reduce((a,nc)=>a+parseFloat(nc.valor.replace(',','.'))||0,0);
+  var tf=document.getElementById('nc_tfoot');
+  tf.style.display=ncs.length?'':'none';
+  document.getElementById('nc_total').textContent=fmtBRL(total);
+}
+
+// ── DESCRIÇÃO NE ─────────────────────────────────────────────
+function atualizarNE(){
+  // NCs únicas
+  var vistos=new Set(), lista=[];
+  ncs.forEach(nc=>{var n=nc.nc.trim();if(n&&!vistos.has(n)){lista.push(n);vistos.add(n);}});
+  var ncStr=lista.join(' / ')||'—';
+
+  var assunto=gv('c_assunto')||'—';
+  var diexNr=gv('d_diexnr')||'—';
+  var dataRaw=document.getElementById('d_data').value;
+  var dataFmt=dataRaw?fmtDate(dataRaw):'—';
+  var modalNe=modalNeTxt()||'—';
+  var omvNe=gv('ne_omv')||'—';
+
+  // Campos informativos
+  var s=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  s('nf_nc',ncStr); s('nf_assunto',assunto);
+  s('nf_diex',diexNr); s('nf_data',dataFmt); s('nf_modal',modalNe);
+
+  // Montar descrição
+  var desc='('+omvNe+') – '+ncStr+' – '+assunto+' – CONFORME DIEX '+diexNr+' DE '+dataFmt+' – '+modalNe;
+  var r=document.getElementById('ne_resultado');
+  if(r) r.textContent=desc;
+}
+
+function copiarNE(){
+  var txt=document.getElementById('ne_resultado').textContent;
+  if(!txt||txt.indexOf('Preencha')===0){alert('Descrição vazia.');return;}
+  navigator.clipboard.writeText(txt).then(()=>{
+    document.getElementById('status').textContent='✅ Descrição copiada para a área de transferência!';
+    setTimeout(()=>{document.getElementById('status').textContent='';},3000);
+  });
+}
+
+// ── LIMPAR ──────────────────────────────────────────────────
+function limparTudo(){
+  if(!confirm('Deseja limpar todos os campos?'))return;
+  document.querySelectorAll('input[type=text],input[type=date],textarea').forEach(e=>e.value='');
+  document.querySelectorAll('select').forEach(e=>e.selectedIndex=0);
+  itens=[]; ncs=[];
+  renderItens(); renderNCs();
+  document.getElementById('modal_fields').innerHTML='';
+  document.getElementById('modal_preview').textContent='Selecione uma modalidade para ver o texto gerado.';
+  atualizarNE();
+  document.getElementById('status').textContent='';
+}
+
+// ── GERAR DOCUMENTO ─────────────────────────────────────────
+function gerarDocumento(){
+  var obrig=[
+    {id:'c_om',lbl:'Capa → Nome da OM'},{id:'c_omv',lbl:'Capa → Interessado (OMV)'},
+    {id:'c_setor',lbl:'Capa → Setor Requisitante'},{id:'c_nup',lbl:'Capa → NUP'},
+    {id:'c_assunto',lbl:'Capa → Assunto'},{id:'c_ug',lbl:'Capa → UG'},
+    {id:'d_diexnr',lbl:'DIEx → DIEx nº'},{id:'d_cargo',lbl:'DIEx → Cargo'},
+    {id:'d_omvdo',lbl:'DIEx → OMV (Do)'},{id:'d_asstp',lbl:'DIEx → Tipo de Assunto'},
+    {id:'d_razao',lbl:'Fornecedor → Razão Social'},{id:'d_cnpj',lbl:'Fornecedor → CNPJ'},
+    {id:'d_tempenho',lbl:'Fornecedor → Tipo de Empenho'},
+  ];
+  var falta=obrig.filter(o=>!gv(o.id)).map(o=>o.lbl);
+  if(falta.length){alert('Preencha os campos obrigatórios:\n\n'+falta.join('\n'));return;}
+
+  // Monta texto completo para download TXT (referência para o Python gerar o DOCX)
+  var ne=document.getElementById('ne_resultado').textContent;
+  var linhas=[
+    '=== DADOS DA REQUISITÓRIA – B Adm Gu Natal ===',
+    '',
+    '--- CAPA ---',
+    'OM: '+gv('c_om'),
+    'OMV: '+gv('c_omv'),
+    'Setor: '+gv('c_setor'),
+    'NUP: '+gv('c_nup'),
+    'Assunto: '+gv('c_assunto'),
+    'UG: '+gv('c_ug'),
+    '',
+    '--- DIEx ---',
+    'DIEx nº: '+gv('d_diexnr'),
+    'EB/NUP: '+gv('d_nup'),
+    'Data: '+fmtDate(document.getElementById('d_data').value),
+    'Cargo: '+gv('d_cargo'),
+    'OMV (Do): '+gv('d_omvdo'),
+    'Tipo Assunto: '+gv('d_asstp'),
+    'Requisitante: '+gv('d_req'),
+    '',
+    '--- MODALIDADE ---',
+    modalTxt(),
+    '',
+    '--- FORNECEDOR ---',
+    'Razão Social: '+gv('d_razao'),
+    'CNPJ: '+gv('d_cnpj'),
+    'Tipo Empenho: '+gv('d_tempenho'),
+    '',
+    '--- ITENS ---',
+    ...itens.map((it,i)=>(i+1)+'. '+it.desc+' | '+it.und+' | QTD: '+it.qtd+' | UNIT: '+it.unit+' | TOTAL: '+it.rtotal),
+    '',
+    '--- JUSTIFICATIVA ---',
+    document.getElementById('v_justif').value,
+    '',
+    '--- NOTAS DE CRÉDITO ---',
+    ...ncs.map(nc=>'NC: '+nc.nc+' | ESF: '+nc.esf+' | PTRES: '+nc.ptres+' | FONTE: '+nc.fonte+' | ND: '+nc.nd+' | UGR: '+nc.ugr+' | PI: '+nc.pi+' | VALOR: '+nc.valor),
+    '',
+    '--- ASSINATURAS ---',
+    'Requisitante: '+gv('a_req_nome')+' – '+gv('a_req_posto')+' | '+gv('a_req_func'),
+    'Fiscal Adm: '+gv('a_fisc_nome')+' – '+gv('a_fisc_posto'),
+    'Cmt OMV: '+gv('a_cmt_nome')+' – '+gv('a_cmt_posto'),
+    '',
+    '--- DESCRIÇÃO NE ---',
+    ne,
+  ];
+
+  var blob=new Blob([linhas.join('\n')],{type:'text/plain;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url;
+  a.download='Requisitoria_B_Adm_Gu_Natal.txt';
+  a.click(); URL.revokeObjectURL(url);
+
+  document.getElementById('status').textContent='✅ Dados exportados! Use o app Python para gerar o DOCX final.';
+}
+
+// ── INIT ────────────────────────────────────────────────────
+document.getElementById('d_data').value=new Date().toISOString().slice(0,10);
+atualizarNE();
+</script>
+</body>
+</html>
