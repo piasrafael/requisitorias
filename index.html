@@ -407,114 +407,122 @@ async function iniciarConsultaFiscal(){
   btn.disabled=true; btn.textContent='⏳ Consultando...';
   limparFiscal();
 
+  var cnpjFmt=cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5');
+
   try{
-    // ── 1. Consulta CEIS/CNEP via API Anthropic ──────────────
-    setFStatus('Consultando CEIS e CNEP no Portal da Transparência...',20);
+    // ── 1. Busca dados do CEIS/CNEP via Portal da Transparência ──
+    setFStatus('Buscando dados no Portal da Transparência...',15);
 
-    var cnpjFmt=cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5');
-    var urlCEIS='https://portaldatransparencia.gov.br/sancoes/consulta?paginacaoSimples=true&tamanhoPagina=10&cadastro=1%2C2&cpfCnpj='+cnpj+'&colunasSelecionadas=linkDetalhamento%2Ccadastro%2CcpfCnpj%2CnomeSancionado%2CufSancionado%2Corgao%2CcategoriaSancao%2CdataPublicacao%2CvalorMulta&ordenarPor=nomeSancionado&direcao=asc';
+    // Tenta a API pública do Portal da Transparência diretamente
+    // (sem autenticação para o endpoint de busca geral)
+    var urlConsulta='https://portaldatransparencia.gov.br/sancoes/consulta?paginacaoSimples=true&tamanhoPagina=10&cadastro=1%2C2&cpfCnpj='+cnpj+'&ordenarPor=dataPublicacao&direcao=desc';
 
-    var prompt=`Você é um especialista em licitações públicas brasileiras e na Lei 14.133/2021.
+    var dadosCEIS='Dados não disponíveis via API pública.';
+    var ocorrencias=[];
+    var temImpedimento=false;
+    var esferaImpedimento='';
 
-Analise a situação fiscal do fornecedor abaixo consultando o Portal da Transparência do Governo Federal.
-
-**Fornecedor:**
-- CNPJ: ${cnpjFmt}
-- Razão Social: ${razao||'Não informada'}
-
-**Sua tarefa:**
-1. Com base no CNPJ fornecido, determine se este fornecedor possui restrições no CEIS (Cadastro de Empresas Inidôneas e Suspensas) ou CNEP (Cadastro Nacional de Empresas Punidas).
-2. Classifique cada sanção encontrada por esfera (FEDERAL, ESTADUAL, MUNICIPAL).
-3. Aplique as regras da Lei 14.133/2021:
-   - Sanção na esfera FEDERAL → FORNECEDOR IMPEDIDO NA ESFERA FEDERAL
-   - Declaração de inidoneidade em qualquer esfera → FORNECEDOR IMPEDIDO NA ESFERA FEDERAL (art. 159, §4°)
-   - Sanção apenas estadual/municipal → IMPEDIMENTO ESTADUAL OU MUNICIPAL (não impede contratação federal)
-   - Apenas advertência → ADVERTÊNCIA (não impede contratação)
-   - Sem sanções vigentes → FORNECEDOR SEM IMPEDIMENTO
-
-**IMPORTANTE:** Responda APENAS com um objeto JSON no formato abaixo, sem texto adicional:
-{
-  "status": "IMPEDIDO_FEDERAL" | "IMPEDIDO_ESTADUAL_MUNICIPAL" | "ADVERTENCIA" | "SEM_IMPEDIMENTO",
-  "ocorrencias_ceis": ["descrição de cada sanção encontrada com órgão, tipo, período e esfera"],
-  "resumo": "texto resumido do resultado para exibição"
-}
-
-Se não houver dados disponíveis sobre este CNPJ no CEIS/CNEP, retorne status "SEM_IMPEDIMENTO" com ocorrencias_ceis vazio e resumo indicando que não foram encontradas restrições.`;
-
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        tools:[{type:'web_search_20250305',name:'web_search'}],
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-
-    var data=await resp.json();
-    var textoResposta='';
-    if(data.content){
-      data.content.forEach(blk=>{
-        if(blk.type==='text') textoResposta+=blk.text;
+    // Tenta buscar via fetch com CORS
+    try{
+      var r=await fetch('https://api.portaldatransparencia.gov.br/api-de-dados/ceis?cnpjCpfSancionado='+cnpj+'&pagina=1&tamanhoPagina=10',{
+        headers:{
+          'chave-api-dados':'ff8dbd93f3830547b9fb535798c3efc6',
+          'Accept':'application/json'
+        }
       });
+      if(r.ok){
+        var dados=await r.json();
+        setFStatus('Dados recebidos. Analisando...',50);
+        if(Array.isArray(dados)&&dados.length>0){
+          // Filtra pelo CNPJ consultado
+          var filtrados=dados.filter(item=>{
+            var c=(item.pessoa&&item.pessoa.cnpjFormatado)||
+                  (item.sancionado&&item.sancionado.codigoFormatado)||'';
+            return c.replace(/\D/g,'')==cnpj;
+          });
+          if(filtrados.length>0){
+            filtrados.forEach(item=>{
+              var orgao=(item.orgaoSancionador&&item.orgaoSancionador.nome)||'';
+              var esfera=(item.orgaoSancionador&&item.orgaoSancionador.esfera)||'';
+              var tipo=(item.tipoSancao&&item.tipoSancao.descricaoResumida)||'';
+              var ini=item.dataInicioSancao||'';
+              var fim=item.dataFimSancao||'';
+              var abrang=item.abrangenciaDefinidaDecisaoJudicial||'';
+              // Verifica vigência
+              var vigente=true;
+              if(fim&&fim!=='Sem informação'){
+                try{var pts=fim.split('/');var df=new Date(pts[2],pts[1]-1,pts[0]);vigente=df>=new Date();}catch(e){}
+              }
+              if(!vigente)return;
+              var desc='['+esfera+'] '+tipo+'\n  Órgão Sancionador: '+orgao+'\n  Âmbito: '+abrang+'\n  Período: '+ini+' a '+fim;
+              ocorrencias.push(desc);
+              if(esfera==='FEDERAL'||tipo.toLowerCase().includes('inidoneidade'))temImpedimento=true,esferaImpedimento='FEDERAL';
+              else if((esfera==='ESTADUAL'||esfera==='MUNICIPAL')&&!temImpedimento)esferaImpedimento='ESTADUAL_MUNICIPAL';
+            });
+          }
+        } else {
+          // API retornou lista vazia ou sem filtro → usa análise manual
+          dadosCEIS='API retornou sem registros filtrados para este CNPJ.';
+        }
+      }
+    }catch(corsErr){
+      // CORS bloqueado — orienta consulta manual
+      dadosCEIS='Consulta via API bloqueada pelo navegador (CORS). Use o botão CEIS/CNEP Web.';
     }
 
-    // Parse JSON da resposta
-    var resultado={status:'SEM_IMPEDIMENTO',ocorrencias_ceis:[],resumo:'Nenhuma restrição encontrada no CEIS/CNEP.'};
-    try{
-      var jsonMatch=textoResposta.match(/\{[\s\S]*\}/);
-      if(jsonMatch) resultado=JSON.parse(jsonMatch[0]);
-    }catch(e){}
-
-    setFStatus('CEIS/CNEP consultado. Gerando link SICAF...',70);
+    setFStatus('Processando resultado...',80);
 
     // ── 2. Exibe resultado CEIS/CNEP ─────────────────────────
     var ceisBox=document.getElementById('f_ceis_box');
-    if(resultado.ocorrencias_ceis && resultado.ocorrencias_ceis.length>0){
-      ceisBox.textContent=resultado.ocorrencias_ceis.join('\n');
-      ceisBox.className='ocorr-box '+(resultado.status==='IMPEDIDO_FEDERAL'?'ocorr-fed':'ocorr-mun');
+    if(ocorrencias.length>0){
+      ceisBox.textContent=ocorrencias.join('\n\n');
+      ceisBox.className='ocorr-box '+(temImpedimento&&esferaImpedimento==='FEDERAL'?'ocorr-fed':'ocorr-mun');
     } else {
-      ceisBox.textContent='Nenhuma ocorrência encontrada no CEIS/CNEP.';
-      ceisBox.className='ocorr-box ocorr-ok';
+      ceisBox.textContent=dadosCEIS!=='Dados não disponíveis via API pública.'&&dadosCEIS!=='API retornou sem registros filtrados para este CNPJ.'
+        ? '⚠ '+dadosCEIS+'\n\nUse o botão "🌐 CEIS/CNEP Web" para consulta direta no portal.'
+        : 'Nenhuma sanção vigente encontrada para este CNPJ no CEIS/CNEP.\n\nℹ Confirme também pelo botão "🌐 CEIS/CNEP Web".';
+      ceisBox.className='ocorr-box '+(dadosCEIS.includes('bloqueada')||dadosCEIS.includes('filtrados')?'ocorr-mun':'ocorr-ok');
     }
 
-    // ── 3. SICAF – link direto com instruções ─────────────────
+    // ── 3. SICAF – instruções para consulta manual ────────────
     var sicafBox=document.getElementById('f_sicaf_box');
-    sicafBox.innerHTML=
-      'Para consultar o SICAF, clique no botão "🌐 SICAF Web" abaixo.\n\n'+
-      'Na página que abrir:\n'+
-      '  1. Selecione "Pessoa Jurídica"\n'+
-      '  2. Digite o CNPJ: '+cnpjFmt+'\n'+
-      '  3. Digite a Razão Social: '+(razao||'')+'\n'+
-      '  4. Resolva o captcha e clique em Pesquisar';
+    sicafBox.textContent=
+      'O SICAF requer captcha e não pode ser consultado automaticamente pelo navegador.\n\n'+
+      'Para consultar, clique em "🌐 SICAF Web" e preencha:\n'+
+      '  • Tipo de Pessoa: Pessoa Jurídica\n'+
+      '  • CNPJ: '+cnpjFmt+'\n'+
+      '  • Razão Social: '+(razao||'(informar)')+'\n\n'+
+      'Resolva o captcha e clique em Pesquisar.';
     sicafBox.className='ocorr-box ocorr-info';
 
     // ── 4. Semáforo ───────────────────────────────────────────
     var sem=document.getElementById('f_semaforo');
-    if(resultado.status==='IMPEDIDO_FEDERAL'){
+    if(temImpedimento&&esferaImpedimento==='FEDERAL'){
       sem.className='fiscal-semaforo semaforo-vermelho';
-      sem.textContent='⛔  FORNECEDOR IMPEDIDO NA ESFERA FEDERAL';
-    } else if(resultado.status==='IMPEDIDO_ESTADUAL_MUNICIPAL'){
+      sem.textContent='⛔  FORNECEDOR IMPEDIDO NA ESFERA FEDERAL (CEIS/CNEP)';
+    } else if(esferaImpedimento==='ESTADUAL_MUNICIPAL'){
       sem.className='fiscal-semaforo semaforo-amarelo';
-      sem.textContent='⚠  IMPEDIMENTO ESTADUAL OU MUNICIPAL';
-    } else if(resultado.status==='ADVERTENCIA'){
+      sem.textContent='⚠  IMPEDIMENTO ESTADUAL OU MUNICIPAL (CEIS/CNEP)';
+    } else if(ocorrencias.length===0&&(dadosCEIS.includes('bloqueada')||dadosCEIS.includes('filtrados'))){
       sem.className='fiscal-semaforo semaforo-amarelo';
-      sem.textContent='⚠  ADVERTÊNCIA FEDERAL, ESTADUAL OU MUNICIPAL';
+      sem.textContent='⚠  Consulta parcial – verifique CEIS/CNEP e SICAF manualmente';
     } else {
       sem.className='fiscal-semaforo semaforo-verde';
-      sem.textContent='✅  FORNECEDOR SEM IMPEDIMENTO (CEIS/CNEP)';
+      sem.textContent='✅  SEM IMPEDIMENTO NO CEIS/CNEP – Verifique também o SICAF';
     }
 
-    setFStatus('✔ Consulta CEIS/CNEP concluída. Verifique também o SICAF manualmente.',100);
+    setFStatus('✔ Concluído. Verifique também o SICAF pelo botão abaixo.',100);
 
   }catch(err){
     console.error(err);
     document.getElementById('f_semaforo').className='fiscal-semaforo semaforo-amarelo';
-    document.getElementById('f_semaforo').textContent='⚠  Erro na consulta – verifique manualmente';
-    document.getElementById('f_ceis_box').textContent='Erro ao consultar: '+err.message+'\n\nUse o botão "🌐 CEIS/CNEP Web" para consulta manual.';
+    document.getElementById('f_semaforo').textContent='⚠  Consulte manualmente via botões abaixo';
+    document.getElementById('f_ceis_box').textContent=
+      'Não foi possível consultar automaticamente.\n\n'+
+      'Use os botões "🌐 CEIS/CNEP Web" e "🌐 SICAF Web" para consulta manual.\n\n'+
+      'CNPJ: '+cnpjFmt+'\nRazão Social: '+(razao||'');
     document.getElementById('f_ceis_box').className='ocorr-box ocorr-mun';
-    setFStatus('Erro na consulta.',0);
+    setFStatus('Use os botões abaixo para consulta manual.',0);
   } finally {
     btn.disabled=false;btn.textContent='🔍 CONSULTAR SITUAÇÃO DA EMPRESA';
   }
