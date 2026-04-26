@@ -53,6 +53,13 @@ textarea{resize:vertical;line-height:1.6}
   <p>Sistema Integrado · Capa + DIEx Requisitório + Descrição NE · Exporta DOCX</p>
 </header>
 
+<div style="background:#1a3d8f;padding:7px 24px;display:flex;align-items:center;gap:14px;border-bottom:2px solid #0d2b6b">
+  <span style="color:#cde;font-size:12px;font-weight:700;white-space:nowrap">🖼 Brasão (PNG):</span>
+  <input type="file" id="brasao_input" accept="image/png" onchange="carregarBrasao(this)"
+    style="font-size:12px;color:#fff;background:transparent;border:1px solid #4466aa;border-radius:4px;padding:3px 8px;width:auto;cursor:pointer"/>
+  <span id="brasao_status" style="font-size:11px;color:#aac4ff">Nenhum arquivo carregado – o brasão não aparecerá no DOCX</span>
+</div>
+
 <div class="tabs">
   <div class="tab active" onclick="showTab(0)">📋 Capa</div>
   <div class="tab" onclick="showTab(1)">📄 Cabeçalho DIEx</div>
@@ -441,12 +448,55 @@ function TBL(rows){
     +'</w:tbl>';
 }
 
+// ── Imagem base64 ─────────────────────────────────────────────
+// Para adicionar o brasão: carregue o arquivo PNG abaixo
+var BRASAO_B64 = '';  // preenchido via input de arquivo
+
+function imgRun(b64){
+  if(!b64) return '';
+  // EMU: 1 cm = 360000 EMU. Brasão: 2,5cm x 2,5cm
+  var cx=900000, cy=900000;
+  var rid='rId3';
+  return '<w:r><w:rPr/><w:drawing>'
+    +'<wp:inline distT="0" distB="0" distL="0" distR="0"'
+    +' xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">'
+    +'<wp:extent cx="'+cx+'" cy="'+cy+'"/>'
+    +'<wp:effectExtent l="0" t="0" r="0" b="0"/>'
+    +'<wp:docPr id="1" name="brasao"/>'
+    +'<wp:cNvGraphicFramePr/>'
+    +'<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+    +'<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+    +'<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+    +'<pic:nvPicPr><pic:cNvPr id="1" name="brasao"/><pic:cNvPicPr/></pic:nvPicPr>'
+    +'<pic:blipFill>'
+    +'<a:blip r:embed="'+rid+'" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>'
+    +'<a:stretch><a:fillRect/></a:stretch>'
+    +'</pic:blipFill>'
+    +'<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm>'
+    +'<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
+    +'</pic:spPr>'
+    +'</pic:pic>'
+    +'</a:graphicData>'
+    +'</a:graphic>'
+    +'</wp:inline>'
+    +'</w:drawing></w:r>';
+}
+
+function cabecalhoOM(om){
+  var s='';
+  if(BRASAO_B64){
+    s+=P(imgRun(BRASAO_B64),'center');
+  }
+  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
+  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
+  s+=PB(om,'center',SZ11);
+  return s;
+}
+
 // ── CAPA ──────────────────────────────────────────────────────
 function buildCapa(){
   var s='';
-  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
-  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
-  s+=PB(gv('c_om'),'center',SZ11);
+  s+=cabecalhoOM(gv('c_om'));
   s+=P('');
 
   // Tabela 1
@@ -591,9 +641,7 @@ function buildNE(){
   var om=gv('c_om');
   var neDesc=document.getElementById('ne_resultado').textContent||'';
   s+='<w:p><w:pPr><w:pageBreakBefore/></w:pPr></w:p>';
-  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
-  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
-  s+=PB(om,'center',SZ11);
+  s+=cabecalhoOM(gv('c_om'));
   s+=P('');
   s+=PB('DESCRIÇÃO DA NOTA DE EMPENHO','center');
   s+=P('');
@@ -631,6 +679,9 @@ function MiniZip(){
   var files=[];
   this.add=function(name,str){
     files.push({name:name,data:new TextEncoder().encode(str)});
+  };
+  this.addBin=function(name,bytes){
+    files.push({name:name,data:bytes});
   };
   this.blob=function(){
     var enc=new TextEncoder();
@@ -696,6 +747,7 @@ function gerarDocx(){
       +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
       +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
       +'<Default Extension="xml" ContentType="application/xml"/>'
+      +'<Default Extension="png" ContentType="image/png"/>'
       +'<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
       +'<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
       +'<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>'
@@ -710,14 +762,14 @@ function gerarDocx(){
       +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
       +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
       +'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>'
+      +(BRASAO_B64?'<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/brasao.png"/>':'')
       +'</Relationships>');
     z.add('word/settings.xml',
       '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       +'<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
       +'<w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat>'
       +'</w:settings>');
-    z.add('word/styles.xml',
-      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    z.add('word/styles.xml',      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       +'<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
       +' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml">'
       +'<w:docDefaults><w:rPrDefault><w:rPr>'
@@ -738,6 +790,16 @@ function gerarDocx(){
       +'</w:styles>');
     z.add('word/document.xml', buildDocumentXml());
 
+    // Adiciona imagem do brasão se carregada
+    if(BRASAO_B64){
+      var b64clean=BRASAO_B64.replace(/^data:image\/png;base64,/,'');
+      var bin=atob(b64clean);
+      var bytes=new Uint8Array(bin.length);
+      for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      // Adiciona Content_Type para imagem
+      z.addBin('word/media/brasao.png', bytes);
+    }
+
     var blob=z.blob();
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
@@ -756,6 +818,18 @@ function gerarDocx(){
 
 document.getElementById('d_data').value=new Date().toISOString().slice(0,10);
 atualizarNE();
+
+function carregarBrasao(input){
+  var file=input.files[0];
+  if(!file){BRASAO_B64='';document.getElementById('brasao_status').textContent='Nenhum arquivo carregado';return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    BRASAO_B64=e.target.result; // data:image/png;base64,...
+    document.getElementById('brasao_status').textContent='✅ '+file.name+' carregado ('+Math.round(file.size/1024)+' KB)';
+    document.getElementById('brasao_status').style.color='#86efac';
+  };
+  reader.readAsDataURL(file);
+}
 </script>
 </body>
 </html>
