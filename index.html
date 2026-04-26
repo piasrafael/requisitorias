@@ -52,6 +52,7 @@ textarea{resize:vertical;line-height:1.6}
   <h1>⚔ GERADOR DE REQUISITÓRIAS — B Adm Gu Natal</h1>
   <p>Sistema Integrado · Capa + DIEx Requisitório + Descrição NE · Exporta DOCX</p>
 </header>
+
 <div class="tabs">
   <div class="tab active" onclick="showTab(0)">📋 Capa</div>
   <div class="tab" onclick="showTab(1)">📄 Cabeçalho DIEx</div>
@@ -62,6 +63,7 @@ textarea{resize:vertical;line-height:1.6}
   <div class="tab" onclick="showTab(6)">✍ Assinaturas</div>
   <div class="tab" onclick="showTab(7)">🗒 Descrição NE</div>
 </div>
+
 <div class="panel-wrap">
 <div class="tab-panel active" id="panel-0">
   <div class="sec-hd">DADOS DA CAPA REQUISITÓRIA</div>
@@ -87,12 +89,16 @@ textarea{resize:vertical;line-height:1.6}
   <div class="frow"><label>UG:</label>
     <select id="c_ug"><option value="">— selecione —</option><option>PRIMÁRIA</option><option>SECUNDÁRIA</option></select></div>
 </div>
+
 <div class="tab-panel" id="panel-1">
   <div class="sec-hd">CABEÇALHO DO DIEx REQUISITÓRIO</div>
-  <div class="frow"><label>DIEx nº:</label><input type="text" id="d_diexnr" oninput="atualizarNE()"/></div>
-  <div class="frow"><label>EB (NUP):</label><input type="text" id="d_nup" class="readonly-inp" readonly/></div>
+  <div class="frow"><label>DIEx nº:</label>
+    <input type="text" id="d_diexnr" oninput="atualizarNE()"/></div>
+  <div class="frow"><label>EB (NUP):</label>
+    <input type="text" id="d_nup" class="readonly-inp" readonly/></div>
   <div class="frow"><label></label><span class="hint">Preenchido automaticamente da Capa</span></div>
-  <div class="frow"><label>Data:</label><input type="date" id="d_data" oninput="atualizarNE()" style="width:200px"/></div>
+  <div class="frow"><label>Data:</label>
+    <input type="date" id="d_data" oninput="atualizarNE()" style="width:200px"/></div>
   <div class="frow"><label>Cargo (Do):</label>
     <select id="d_cargo"><option value="">— selecione —</option>
       <option>Comandante</option><option>Chefe do Estado-Maior</option><option>Chefe</option></select></div>
@@ -105,9 +111,11 @@ textarea{resize:vertical;line-height:1.6}
     <select id="d_asstp"><option value="">— selecione —</option>
       <option>passagens</option><option>diárias</option>
       <option>aquisição de material</option><option>contratação de serviço</option></select></div>
-  <div class="frow"><label>Requisitante:</label><input type="text" id="d_req" class="readonly-inp"/></div>
+  <div class="frow"><label>Requisitante:</label>
+    <input type="text" id="d_req" class="readonly-inp"/></div>
   <div class="frow"><label></label><span class="hint">Preenchido automaticamente da Capa</span></div>
 </div>
+
 <div class="tab-panel" id="panel-2">
   <div class="sec-hd">§1 – MODALIDADE DE LICITAÇÃO</div>
   <div class="frow"><label>Modalidade:</label>
@@ -120,6 +128,7 @@ textarea{resize:vertical;line-height:1.6}
   <div id="modal_fields"></div>
   <div class="modal-preview" id="modal_preview">Selecione uma modalidade.</div>
 </div>
+
 <div class="tab-panel" id="panel-3">
   <div class="sec-hd">§2 – DADOS DO FORNECEDOR</div>
   <div class="frow"><label>Razão Social:</label><input type="text" id="d_razao"/></div>
@@ -153,10 +162,12 @@ textarea{resize:vertical;line-height:1.6}
     <td id="item_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
   </tfoot></table>
 </div>
+
 <div class="tab-panel" id="panel-4">
   <div class="sec-hd">§3 – JUSTIFICATIVA</div>
   <textarea id="v_justif" rows="12" placeholder="Justifique a necessidade da aquisição ou contratação..."></textarea>
 </div>
+
 <div class="tab-panel" id="panel-5">
   <div class="sec-hd">§5 – PROPOSTA DE RECURSO (NOTAS DE CRÉDITO)</div>
   <div class="nc-grid" style="margin-bottom:2px">
@@ -180,6 +191,7 @@ textarea{resize:vertical;line-height:1.6}
     <td id="nc_total" style="font-weight:700;background:#e8eef8"></td><td></td></tr>
   </tfoot></table>
 </div>
+
 <div class="tab-panel" id="panel-6">
   <div class="sec-hd">ASSINATURA DO REQUISITANTE</div>
   <div class="frow"><label>Nome completo:</label><input type="text" id="a_req_nome"/></div>
@@ -192,6 +204,7 @@ textarea{resize:vertical;line-height:1.6}
   <div class="frow"><label>Nome completo:</label><input type="text" id="a_cmt_nome"/></div>
   <div class="frow"><label>Posto:</label><input type="text" id="a_cmt_posto"/></div>
 </div>
+
 <div class="tab-panel" id="panel-7">
   <div class="sec-hd">🗒 BLOCO 3 – DESCRIÇÃO DA NOTA DE EMPENHO (NE)</div>
   <div class="frow"><label>OMV (sigla NE):</label>
@@ -214,6 +227,7 @@ textarea{resize:vertical;line-height:1.6}
   <button class="btn-copy" onclick="copiarNE()">📋 Copiar Descrição</button>
 </div>
 </div>
+
 <div class="bottom-bar">
   <span id="status"></span>
   <div style="display:flex;gap:8px">
@@ -226,18 +240,6 @@ textarea{resize:vertical;line-height:1.6}
 var itens=[],ncs=[];
 var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 
-// ── Brasão PNG completo em base64 ────────────────────────────
-var BRASAO_B64='iVBORw0KGgoAAAANSUhEUgAAAEUAAABGCAYAAACaGVmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADs8AAA7EAf/s/tgAACq+SURBVHhezZsHVFVX264niBJNJCZo1MRurCAgYgFBEUUUUUSUYsOCIBbEboy9R4090cTexS5GbIAoYMGC2AVFugiC2LD73LH2QaNG/z/5br5x7xxjDQ77HPZZ691zzfnOdy6E/weWn5+ijf/NXr9+xYMHmR9e/q+bfHjhv21PntwjMXE/cXGruXPnorZwZZGRO0hPT3r7uZycK6SlnSQlJYqCgrvv3OG/b/8FUF5/eOGtPX6cTUpKNMnJkcTHryMx8QC5uVfIykpj0LDirNs0SPtcaupxzp1bSWpqDCkpx8jKiv/wVv9V+9dByc1NIDv7MgUFubx8+ez99+7GcetWpLbY8+dXc+PGAbKz41mzuT9+HkKg/1ecv3CQpKQDxMevJy3tBOnpUaRnxPD48fveojzs5cvnmuc9fHj7rcf9G/avgvL8eQFpaccLF3OSuzlnefE4hQdZ2axePZfVa2fwOD+eB/cucOHiem7eDOXs2d30HW3IOSNhTT1hzAILLl/aw+XLW8jIOElcfAiXLofy4Hmy9h3Zz/IoeJlLTvYFbt8+R2pqNJmZ53j+/NGH0/mP7V8FRQVPBUZaegyP768lMXE/cXGruXPnorZwZZGRO0hPT3r7uZycK6SlnSQlJYqCgrvv3OG/b/8FUF5/eOGtPX6cTUpKNMnJkcTHryMx8QC5uVfIykpj0LDirNs0SPtcaupxzp1bSWpqDCkpx8jKiv/wVv9V+9dByc1NIDv7MgUFubx8+ez99+7GcetWpLbY8+dXc+PGAbKz41mzuT9+HkKg/1ecv3CQpKQDxMevJy3tBOnpUaRnxPD48fveojzs5cvnmuc9fHj7rcf9G/avgvL8eQFpaccLF3OSuzlnefE4hQdZ2axePZfVa2fwOD+eB/cucOHiem7eDOXs2d30HW3IOSNhTT1hzAILLl/aw+XLW8jIOElcfAiXLofy4Hmy9h3Zz/IoeJlLTvYFbt8+R2pqNJmZ53j+/NGH0/mP7V8FRQVPBUZaegyP768';
-
-// ── Converte base64 para Uint8Array ──────────────────────────
-function b64ToBytes(b64){
-  var bin=atob(b64);
-  var bytes=new Uint8Array(bin.length);
-  for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-  return bytes;
-}
-
-// ── UI helpers ───────────────────────────────────────────────
 function showTab(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
@@ -252,7 +254,16 @@ function fmtDateExt(v){if(!v)return'';var p=v.split('-');return parseInt(p[2])+'
 function fmtBRL(v){return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function parseNum(s){return parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0;}
 function setStatus(msg,ok){var s=document.getElementById('status');s.style.color=ok?'#15803d':'#dc2626';s.textContent=msg;if(ok)setTimeout(()=>s.textContent='',5000);}
-function xe(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');}
+
+// escapa caracteres especiais XML
+function xe(s){
+  return String(s||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&apos;');
+}
 
 function renderModalFields(){
   var m=gv('modal_tipo'),f=document.getElementById('modal_fields');
@@ -350,123 +361,159 @@ function limparTudo(){
   atualizarNE();setStatus('',true);
 }
 
-// ════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // GERAÇÃO DOCX
-// ════════════════════════════════════════════════════════════
-var SZ12=24,SZ11=22,SZ10=20,SZ9=18;
+// ═══════════════════════════════════════
 
+// Constantes de tamanho (em half-points: 1pt = 2)
+var SZ12=24, SZ11=22, SZ10=20, SZ9=18;
+
+// Propriedades de run padrão (Times New Roman 12pt preto)
 function rPr(bold,sz){
   sz=sz||SZ12;
   return '<w:rPr>'
     +'<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
     +(bold?'<w:b/><w:bCs/>':'')
     +'<w:color w:val="000000"/>'
-    +'<w:sz w:val="'+sz+'"/><w:szCs w:val="'+sz+'"/>'
+    +'<w:sz w:val="'+sz+'"/>'
+    +'<w:szCs w:val="'+sz+'"/>'
     +'</w:rPr>';
 }
-function R(txt,bold,sz){return '<w:r>'+rPr(bold,sz)+'<w:t xml:space="preserve">'+xe(txt)+'</w:t></w:r>';}
-function RB(txt,sz){return R(txt,true,sz);}
-function pPr(jc){return '<w:pPr><w:spacing w:after="0" w:before="0" w:line="360" w:lineRule="auto"/>'+(jc?'<w:jc w:val="'+jc+'"/>':'')+'</w:pPr>';}
-function P(runs,jc){return '<w:p>'+pPr(jc||'')+(runs||'')+'</w:p>';}
-function PB(txt,jc,sz){return P(RB(txt,sz),jc);}
-function PT(txt,jc,sz){return P(R(txt,false,sz),jc);}
 
-var BRD='<w:tcBorders>'
+// Run de texto
+function R(txt,bold,sz){
+  var safe=xe(txt);
+  return '<w:r>'+rPr(bold,sz)+'<w:t xml:space="preserve">'+safe+'</w:t></w:r>';
+}
+function RB(txt,sz){return R(txt,true,sz);}
+
+// Propriedades de parágrafo
+function pPr(jc,keepLines){
+  var jcEl=jc?'<w:jc w:val="'+jc+'"/>':'';
+  var keep=keepLines?'<w:keepLines/>':'';
+  return '<w:pPr>'
+    +'<w:spacing w:after="0" w:before="0" w:line="360" w:lineRule="auto"/>'
+    +jcEl+keep
+    +'</w:pPr>';
+}
+
+// Parágrafo
+function P(runs,jc){
+  return '<w:p>'+pPr(jc||'')+(runs||'')+'</w:p>';
+}
+function PB(txt,jc,sz){return P(RB(txt,sz),jc);}   // parágrafo bold
+function PT(txt,jc,sz){return P(R(txt,false,sz),jc);} // parágrafo texto
+
+// Bordas de célula
+var BORDA='<w:tcBorders>'
   +'<w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
   +'<w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
   +'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
   +'<w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
   +'</w:tcBorders>';
 
+// Célula de tabela
 function TC(content,span,shade){
   var sp=span&&span>1?'<w:gridSpan w:val="'+span+'"/>':'';
   var sh=shade?'<w:shd w:val="clear" w:color="auto" w:fill="'+shade+'"/>':'';
-  return '<w:tc><w:tcPr>'+BRD+sp+sh+'</w:tcPr>'+content+'</w:tc>';
+  return '<w:tc><w:tcPr>'+BORDA+sp+sh+'</w:tcPr>'+content+'</w:tc>';
 }
-function TR(cells,h){
-  return '<w:tr>'+(h?'<w:trPr><w:trHeight w:val="'+h+'" w:hRule="exact"/></w:trPr>':'<w:trPr/>')+cells+'</w:tr>';
+
+// Linha de tabela
+function TR(cells,height){
+  var trPr=height
+    ?'<w:trPr><w:trHeight w:val="'+height+'" w:hRule="exact"/></w:trPr>'
+    :'<w:trPr/>';
+  return '<w:tr>'+trPr+cells+'</w:tr>';
 }
+
+// Tabela (100% largura, autofit)
 function TBL(rows){
   return '<w:tbl>'
-    +'<w:tblPr><w:tblStyle w:val="TableGrid"/>'
+    +'<w:tblPr>'
+    +'<w:tblStyle w:val="TableGrid"/>'
     +'<w:tblW w:w="5000" w:type="pct"/>'
-    +'<w:tblLayout w:type="autofit"/></w:tblPr>'
-    +'<w:tblGrid/>'+rows+'</w:tbl>';
+    +'<w:tblLayout w:type="autofit"/>'
+    +'<w:tblLook w:val="04A0" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:noHBand="0" w:noVBand="0"/>'
+    +'</w:tblPr>'
+    +'<w:tblGrid/>'
+    +rows
+    +'</w:tbl>';
 }
 
-// ── Imagem: usa canvas para renderizar e embute como PNG ─────
-function imgRun(){
-  var cx=900000,cy=900000;
-  return '<w:r><w:rPr><w:noProof/></w:rPr>'
-    +'<w:drawing>'
-    +'<wp:inline distT="0" distB="0" distL="0" distR="0">'
-    +'<wp:extent cx="'+cx+'" cy="'+cy+'"/>'
-    +'<wp:effectExtent l="0" t="0" r="0" b="0"/>'
-    +'<wp:docPr id="1" name="brasao"/>'
-    +'<wp:cNvGraphicFramePr>'
-    +'<a:graphicFrameLocks noChangeAspect="1"/>'
-    +'</wp:cNvGraphicFramePr>'
-    +'<a:graphic>'
-    +'<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'
-    +'<pic:pic>'
-    +'<pic:nvPicPr>'
-    +'<pic:cNvPr id="1" name="brasao"/>'
-    +'<pic:cNvPicPr><a:picLocks noChangeAspect="1"/></pic:cNvPicPr>'
-    +'</pic:nvPicPr>'
-    +'<pic:blipFill>'
-    +'<a:blip r:embed="rId3"/>'
-    +'<a:stretch><a:fillRect/></a:stretch>'
-    +'</pic:blipFill>'
-    +'<pic:spPr>'
-    +'<a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm>'
-    +'<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
-    +'</pic:spPr>'
-    +'</pic:pic>'
-    +'</a:graphicData>'
-    +'</a:graphic>'
-    +'</wp:inline>'
-    +'</w:drawing></w:r>';
-}
-
-function cabOM(om){
-  return P(imgRun(),'center')
-    +PB('MINISTÉRIO DA DEFESA','center',SZ11)
-    +PB('EXÉRCITO BRASILEIRO','center',SZ11)
-    +PB(om,'center',SZ11);
-}
-
+// ── CAPA ──────────────────────────────────────────────────────
 function buildCapa(){
-  var s=cabOM(gv('c_om'))+P('');
+  var s='';
+  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
+  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
+  s+=PB(gv('c_om'),'center',SZ11);
+  s+=P('');
+
+  // Tabela 1
   s+=TBL(
-    TR(TC(P(RB('INTERESSADO: ')+R(gv('c_omv')))+P(RB('SETOR REQUISITANTE: ')+R(gv('c_setor')))+P(RB('PROCESSO: ')+R(gv('c_nup')))))+
-    TR(TC(P(RB('ASSUNTO: ')+R(gv('c_assunto')))+P(RB('ANEXOS: ')+R('DIEx Requisitório, Nota de Crédito, Certidões de regularidade fiscal e demais documentos necessários para o processo (SFC).'))+P(RB('UG: ')+R(gv('c_ug')))+P(RB('EMPENHO: ')+R('2026NE____________     ')+RB('DATA DO EMPENHO: ')+R('_________'))+P(RB('RESPONSÁVEL: ')+R('___________________________'))))
+    TR(TC(
+      P(RB('INTERESSADO: ')+R(gv('c_omv')))+
+      P(RB('SETOR REQUISITANTE: ')+R(gv('c_setor')))+
+      P(RB('PROCESSO: ')+R(gv('c_nup')))
+    ))+
+    TR(TC(
+      P(RB('ASSUNTO: ')+R(gv('c_assunto')))+
+      P(RB('ANEXOS: ')+R('DIEx Requisitório, Nota de Crédito, Certidões de regularidade fiscal e demais documentos necessários para o processo (SFC).'))+
+      P(RB('UG: ')+R(gv('c_ug')))+
+      P(RB('EMPENHO: ')+R('2026NE____________     ')+RB('DATA DO EMPENHO: ')+R('_________'))+
+      P(RB('RESPONSÁVEL: ')+R('___________________________'))
+    ))
   );
   s+=P('');
+
+  // Tabela 2 – Destino/Data
   var t2=TR(TC(PB('DESTINO','center'))+TC(PB('DATA','center')));
   for(var i=0;i<5;i++) t2+=TR(TC(P(''))+TC(P('')),450);
   s+=TBL(t2);
   s+=P('');s+=P('');
-  s+=PB('NATAL – RN','center');s+=PB('2026','center');
+  s+=PB('NATAL – RN','center');
+  s+=PB('2026','center');
   return s;
 }
 
+// ── DIEx ──────────────────────────────────────────────────────
 function buildDiex(){
-  var s='<w:p><w:pPr><w:pageBreakBefore/></w:pPr></w:p>';
-  var om=gv('c_om'),J='both';
-  s+=cabOM(om)+P('');
+  var s='';
+  var om=gv('c_om');
+  var J='both';
+
+  // Quebra de página
+  s+='<w:p><w:pPr><w:pageBreakBefore/></w:pPr></w:p>';
+
+  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
+  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
+  s+=PB(om,'center',SZ11);
+  s+=P('');
   s+=P(RB('DIEx Requisitório nº ')+R(gv('d_diexnr')));
-  s+=P(RB('EB: ')+R(gv('d_nup')));s+=P('');
-  s+=PT('Natal-RN, '+fmtDateExt(document.getElementById('d_data').value)+'.','right');s+=P('');
+  s+=P(RB('EB: ')+R(gv('d_nup')));
+  s+=P('');
+  s+=PT('Natal-RN, '+fmtDateExt(document.getElementById('d_data').value)+'.','right');
+  s+=P('');
   s+=P(RB('Do ')+R(gv('d_cargo')+' '+gv('d_omvdo')));
   s+=P(RB('Ao ')+R('Ordenador de Despesa da B Adm Gu Natal'));
   s+=P(RB('Assunto: ')+R('requisição para empenho de '+gv('d_asstp')));
-  s+=P(RB('Requisitante: ')+R(gv('d_req')));s+=P('');
+  s+=P(RB('Requisitante: ')+R(gv('d_req')));
+  s+=P('');
+
   s+=P(RB('1. ')+R('Nos termos do contido no documento acima referenciado, solicito providências junto ao Ordenador de Despesas, no sentido de aprovar a requisição de acordo com o que se segue:'),J);
   s+=PT('    a. Modalidade de licitação:',J);
-  s+=PT('    '+modalTxt(),J);s+=P('');
+  s+=PT('    '+modalTxt(),J);
+  s+=P('');
+
   s+=P(RB('2. ')+R('Dados do fornecedor e especificações do item:'),J);
-  var totalI=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
-  var iRows=itens.map(it=>TR(['ord','item','si','desc','und','qtd','unit','rtotal','','','',''].map((k,idx)=>TC(PT(idx<8?it[k]||'':''))).join(''))).join('');
+
+  // Tabela fornecedor/itens
+  var totalItens=itens.reduce((a,it)=>a+parseNum(it.rtotal),0);
+  var iRows=itens.map(it=>
+    TR(['ord','item','si','desc','und','qtd','unit','rtotal','','','','']
+      .map((k,idx)=>TC(PT(idx<8?it[k]||'':''))).join(''))
+  ).join('');
+
   s+=TBL(
     TR(TC(PB('RAZÃO SOCIAL',null,SZ10))+TC(PT(gv('d_razao'),null,SZ10),11))+
     TR(TC(PB('CNPJ',null,SZ10))+TC(PT(gv('d_cnpj'),null,SZ10),11))+
@@ -474,150 +521,228 @@ function buildDiex(){
     TR(TC(PB('PREENCHIMENTO A CARGO DA OM','center',SZ9),8)+TC(PB('RETIFICAÇÕES (SFC) - A CARGO DO EMPENHADOR','center',SZ9),4))+
     TR(['ORD','ITEM','SI','DESCRIÇÃO','UND','QTD','R$ UNIT','R$ TOTAL','QTD','R$ TOTAL','RESP','RUBRICA'].map(h=>TC(PB(h,'center',SZ9))).join(''))+
     iRows+
-    TR(TC(PB('TOTAL',null,SZ10),7)+TC(PB(fmtBRL(totalI),null,SZ10))+TC(P(''))+TC(P(''))+TC(P(''))+TC(P('')))
+    TR(TC(PB('TOTAL',null,SZ10),7)+TC(PB(fmtBRL(totalItens),null,SZ10))+TC(P(''))+TC(P(''))+TC(P(''))+TC(P('')))
   );
   s+=P('');
-  s+=P(RB('3. ')+R('Justificativa para a aquisição/contratação:'),J);s+=P('');
-  s+=PT(document.getElementById('v_justif').value||'',J);s+=P('');
-  s+=P(RB('4. ')+R('Confirmo que os quantitativos e/ou valores mínimos dos itens para empenho e os quantitativos por OM foram verificados e obedecidos'),J);s+=P('');
-  s+=P(RB('5. ')+R('Proposta de recurso:'),J);
-  var totalN=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
-  var ncRows=ncs.map(nc=>TR(['nc','esf','ptres','fonte','nd','ugr','pi','valor'].map(k=>TC(PT(nc[k]||'',null,SZ10))).join(''))).join('');
-  s+=TBL(TR(['NC','ESF','PTRES','FONTE','ND','UGR','PI','VALOR'].map(h=>TC(PB(h,'center',SZ10))).join(''))+ncRows+TR(TC(PB('TOTAL',null,SZ10),7)+TC(PB(fmtBRL(totalN),null,SZ10))));
+
+  s+=P(RB('3. ')+R('Justificativa para a aquisição/contratação:'),J);
   s+=P('');
+  s+=PT(document.getElementById('v_justif').value||'',J);
+  s+=P('');
+
+  s+=P(RB('4. ')+R('Confirmo que os quantitativos e/ou valores mínimos dos itens para empenho e os quantitativos por OM foram verificados e obedecidos'),J);
+  s+=P('');
+
+  s+=P(RB('5. ')+R('Proposta de recurso:'),J);
+
+  var totalNc=ncs.reduce((a,nc)=>a+(parseFloat(nc.valor.replace(',','.'))||0),0);
+  var ncRows=ncs.map(nc=>
+    TR(['nc','esf','ptres','fonte','nd','ugr','pi','valor'].map(k=>TC(PT(nc[k]||'',null,SZ10))).join(''))
+  ).join('');
+
+  s+=TBL(
+    TR(['NC','ESF','PTRES','FONTE','ND','UGR','PI','VALOR'].map(h=>TC(PB(h,'center',SZ10))).join(''))+
+    ncRows+
+    TR(TC(PB('TOTAL',null,SZ10),7)+TC(PB(fmtBRL(totalNc),null,SZ10)))
+  );
+  s+=P('');
+
   s+=P(RB('6. ')+R('Nos termos contidos na Lei 14.133/21, solicito providências junto ao Ordenador de Despesas da Base Administrativa desta Guarnição no sentido de aprovar a presente requisição.'),J);
   s+=P('');s+=P('');s+=P('');
   s+=PB(gv('a_req_nome')+' – '+gv('a_req_posto'),'center');
-  s+=PT(gv('a_req_func'),'center');s+=P('');
-  function despTC(titulo,nome,posto,func){
-    return TC(PB(titulo,null,SZ10)+PT('(    ) Sou de parecer FAVORÁVEL à aquisição do material / serviço requisitado.',null,SZ10)+PT('(    ) Sou de parecer DESFAVORÁVEL à aquisição do material / serviço requisitado, tendo em vista:',null,SZ10)+PT('________________________________________________________________',null,SZ10)+PT('________________________________________________________________',null,SZ10)+PT('Natal - RN, _____ / _____ / 2026.',null,SZ10)+P('')+P('')+PB(nome+' – '+posto,null,SZ10)+PT(func,null,SZ10));
-  }
-  s+=TBL(TR(despTC('DESPACHO DO FISCAL ADMINISTRATIVO DA OM',gv('a_fisc_nome'),gv('a_fisc_posto'),'Fisc Adm OMV')+despTC('DESPACHO DO CMT OM',gv('a_cmt_nome'),gv('a_cmt_posto'),'Cmt da OMV')));
+  s+=PT(gv('a_req_func'),'center');
   s+=P('');
-  s+=TBL(TR(TC(PT('(   ) DEFIRO: 1. Ordeno a aquisição do material/serviço requisitado; 2. A SALC emita Nota de Empenho, submetendo-a a este OD posteriormente. (   ) INDEFIRO, tendo em vista:',null,SZ10)+PT('__________________________________________________________________________________________',null,SZ10)+PT('__________________________________________________________________________________________',null,SZ10)+PT('(   ) O requisitante promova as alterações indicadas; (   ) Arquive-se.',null,SZ10)+PT('Natal - RN, _____ / _____ / 2026.',null,SZ10)+P('')+P('')+PB('FERNANDO TEODORO COELHO DE ARAÚJO JÚNIOR - Cel',null,SZ10)+PT('OD Base Adm Gu N',null,SZ10))));
+
+  function despTC(titulo,nome,posto,func){
+    return TC(
+      PB(titulo,null,SZ10)+
+      PT('(    ) Sou de parecer FAVORÁVEL à aquisição do material / serviço requisitado.',null,SZ10)+
+      PT('(    ) Sou de parecer DESFAVORÁVEL à aquisição do material / serviço requisitado, tendo em vista:',null,SZ10)+
+      PT('________________________________________________________________',null,SZ10)+
+      PT('________________________________________________________________',null,SZ10)+
+      PT('Natal - RN, _____ / _____ / 2026.',null,SZ10)+
+      P('')+P('')+
+      PB(nome+' – '+posto,null,SZ10)+
+      PT(func,null,SZ10)
+    );
+  }
+  s+=TBL(TR(
+    despTC('DESPACHO DO FISCAL ADMINISTRATIVO DA OM',gv('a_fisc_nome'),gv('a_fisc_posto'),'Fisc Adm OMV')+
+    despTC('DESPACHO DO CMT OM',gv('a_cmt_nome'),gv('a_cmt_posto'),'Cmt da OMV')
+  ));
+  s+=P('');
+
+  s+=TBL(TR(TC(
+    PT('(   ) DEFIRO: 1. Ordeno a aquisição do material/serviço requisitado; 2. A SALC emita Nota de Empenho, submetendo-a a este OD posteriormente. (   ) INDEFIRO, tendo em vista:',null,SZ10)+
+    PT('__________________________________________________________________________________________',null,SZ10)+
+    PT('__________________________________________________________________________________________',null,SZ10)+
+    PT('(   ) O requisitante promova as alterações indicadas; (   ) Arquive-se.',null,SZ10)+
+    PT('Natal - RN, _____ / _____ / 2026.',null,SZ10)+
+    P('')+P('')+
+    PB('FERNANDO TEODORO COELHO DE ARAÚJO JÚNIOR - Cel',null,SZ10)+
+    PT('OD Base Adm Gu N',null,SZ10)
+  )));
   return s;
 }
 
+// ── NE ────────────────────────────────────────────────────────
 function buildNE(){
-  var s='<w:p><w:pPr><w:pageBreakBefore/></w:pPr></w:p>';
-  s+=cabOM(gv('c_om'))+P('');
-  s+=PB('DESCRIÇÃO DA NOTA DE EMPENHO','center');s+=P('');
+  var s='';
+  var om=gv('c_om');
   var neDesc=document.getElementById('ne_resultado').textContent||'';
-  s+=TBL(TR(TC(PB('DESCRIÇÃO PARA A NOTA DE EMPENHO (NE)','center',SZ11),'','E8EEF8'))+TR(TC(PT(neDesc))));
+  s+='<w:p><w:pPr><w:pageBreakBefore/></w:pPr></w:p>';
+  s+=PB('MINISTÉRIO DA DEFESA','center',SZ11);
+  s+=PB('EXÉRCITO BRASILEIRO','center',SZ11);
+  s+=PB(om,'center',SZ11);
+  s+=P('');
+  s+=PB('DESCRIÇÃO DA NOTA DE EMPENHO','center');
+  s+=P('');
+  s+=TBL(
+    TR(TC(PB('DESCRIÇÃO PARA A NOTA DE EMPENHO (NE)','center',SZ11),'','E8EEF8'))+
+    TR(TC(PT(neDesc)))
+  );
   s+=P('');
   s+=P(RB('INSTRUÇÕES: ',SZ10)+R('Copie o texto acima e cole no campo "Descrição" da Nota de Empenho no sistema SIAFI.',false,SZ10),'both');
   return s;
 }
 
-function buildDocXml(){
+// ── Montar XML do documento ───────────────────────────────────
+function buildDocumentXml(){
   var body=buildCapa()+buildDiex()+buildNE();
   body+='<w:sectPr><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr>';
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-    +'<w:document'
+    +'<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"'
     +' xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"'
     +' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
+    +' xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"'
+    +' xmlns:o="urn:schemas-microsoft-com:office:office"'
+    +' xmlns:v="urn:schemas-microsoft-com:vml"'
     +' xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"'
-    +' xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
-    +' xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"'
     +' xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
     +' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"'
+    +' xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"'
     +' mc:Ignorable="w14">'
-    +'<w:body>'+body+'</w:body></w:document>';
+    +'<w:body>'+body+'</w:body>'
+    +'</w:document>';
 }
 
-// ── ZIP robusto ───────────────────────────────────────────────
+// ── ZIP mínimo ────────────────────────────────────────────────
+function MiniZip(){
+  var files=[];
+  this.add=function(name,str){
+    files.push({name:name,data:new TextEncoder().encode(str)});
+  };
+  this.blob=function(){
+    var enc=new TextEncoder();
+    var parts=[],cd=[],offset=0;
+    files.forEach(function(f){
+      var nm=enc.encode(f.name);
+      var crc=crc32(f.data);
+      var lh=lhdr(nm,f.data.length,crc);
+      parts.push(lh,f.data);
+      cd.push(chdr(nm,f.data.length,crc,offset));
+      offset+=lh.length+f.data.length;
+    });
+    var cdBuf=cat(cd);
+    var eocd=eocdr(files.length,cdBuf.length,offset);
+    return new Blob([cat(parts),cdBuf,eocd],
+      {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  };
+  function u16(n){return new Uint8Array([n&0xff,(n>>8)&0xff]);}
+  function u32(n){return new Uint8Array([n&0xff,(n>>8)&0xff,(n>>16)&0xff,(n>>24)&0xff]);}
+  function cat(arr){
+    var len=arr.reduce(function(a,b){return a+b.length;},0);
+    var r=new Uint8Array(len),p=0;
+    arr.forEach(function(a){r.set(a,p);p+=a.length;});
+    return r;
+  }
+  function lhdr(nm,sz,crc){
+    return cat([new Uint8Array([0x50,0x4b,0x03,0x04]),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nm.length),u16(0),nm]);
+  }
+  function chdr(nm,sz,crc,off){
+    return cat([new Uint8Array([0x50,0x4b,0x01,0x02]),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nm.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off),nm]);
+  }
+  function eocdr(n,cdsz,cdoff){
+    return cat([new Uint8Array([0x50,0x4b,0x05,0x06]),u16(0),u16(0),u16(n),u16(n),u32(cdsz),u32(cdoff),u16(0)]);
+  }
+  function crc32(buf){
+    var t=[];
+    for(var i=0;i<256;i++){var c=i;for(var j=0;j<8;j++)c=c&1?0xedb88320^(c>>>1):c>>>1;t[i]=c;}
+    var c=0xffffffff;
+    for(var i=0;i<buf.length;i++)c=(c>>>8)^t[(c^buf[i])&0xff];
+    return(c^0xffffffff)>>>0;
+  }
+}
+
+// ── Gerar DOCX ────────────────────────────────────────────────
 function gerarDocx(){
-  var obrig=[{id:'c_om',l:'Capa → Nome da OM'},{id:'c_omv',l:'Capa → OMV'},{id:'c_setor',l:'Capa → Setor'},{id:'c_nup',l:'Capa → NUP'},{id:'c_assunto',l:'Capa → Assunto'},{id:'c_ug',l:'Capa → UG'},{id:'d_diexnr',l:'DIEx → DIEx nº'},{id:'d_cargo',l:'DIEx → Cargo'},{id:'d_omvdo',l:'DIEx → OMV (Do)'},{id:'d_razao',l:'Fornecedor → Razão Social'},{id:'d_cnpj',l:'Fornecedor → CNPJ'},{id:'d_tempenho',l:'Fornecedor → Tipo Empenho'}];
+  var obrig=[
+    {id:'c_om',l:'Capa → Nome da OM'},{id:'c_omv',l:'Capa → OMV'},
+    {id:'c_setor',l:'Capa → Setor'},{id:'c_nup',l:'Capa → NUP'},
+    {id:'c_assunto',l:'Capa → Assunto'},{id:'c_ug',l:'Capa → UG'},
+    {id:'d_diexnr',l:'DIEx → DIEx nº'},{id:'d_cargo',l:'DIEx → Cargo'},
+    {id:'d_omvdo',l:'DIEx → OMV (Do)'},{id:'d_razao',l:'Fornecedor → Razão Social'},
+    {id:'d_cnpj',l:'Fornecedor → CNPJ'},{id:'d_tempenho',l:'Fornecedor → Tipo Empenho'}
+  ];
   var falta=obrig.filter(o=>!gv(o.id)).map(o=>o.l);
   if(falta.length){alert('Preencha os campos obrigatórios:\n\n'+falta.join('\n'));return;}
+
   var btn=document.getElementById('btn_gerar');
   btn.textContent='⏳ Gerando...';btn.disabled=true;
-
-  // Usa canvas para recodificar o PNG e garantir integridade
-  var img=new Image();
-  img.onload=function(){
-    try{
-      var canvas=document.createElement('canvas');
-      canvas.width=img.width; canvas.height=img.height;
-      var ctx=canvas.getContext('2d');
-      ctx.drawImage(img,0,0);
-      var pngDataUrl=canvas.toDataURL('image/png');
-      var pngB64=pngDataUrl.split(',')[1];
-      var pngBytes=b64ToBytes(pngB64);
-      _gerarComImagem(pngBytes);
-    }catch(e){
-      console.error(e);
-      setStatus('❌ Erro ao processar imagem: '+e.message,false);
-      btn.textContent='📄 Gerar DOCX (Word)';btn.disabled=false;
-    }
-  };
-  img.onerror=function(){
-    setStatus('❌ Erro ao carregar brasão.',false);
-    btn.textContent='📄 Gerar DOCX (Word)';btn.disabled=false;
-  };
-  img.src='data:image/png;base64,'+BRASAO_B64;
-}
-
-function _gerarComImagem(pngBytes){
-  var btn=document.getElementById('btn_gerar');
   try{
-    var enc=new TextEncoder();
-    var files=[
-      {n:'[Content_Types].xml', d:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>')},
-      {n:'_rels/.rels', d:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')},
-      {n:'word/_rels/document.xml.rels', d:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/brasao.png"/></Relationships>')},
-      {n:'word/settings.xml', d:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>')},
-      {n:'word/styles.xml', d:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/><w:color w:val="000000"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="000000"/></w:tblBorders></w:tblPr></w:style></w:styles>')},
-      {n:'word/document.xml', d:enc.encode(buildDocXml())},
-      {n:'word/media/brasao.png', d:pngBytes},
-    ];
+    var z=new MiniZip();
+    z.add('[Content_Types].xml',
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+      +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+      +'<Default Extension="xml" ContentType="application/xml"/>'
+      +'<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
+      +'<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>'
+      +'<Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>'
+      +'</Types>');
+    z.add('_rels/.rels',
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+      +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>'
+      +'</Relationships>');
+    z.add('word/_rels/document.xml.rels',
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+      +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+      +'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>'
+      +'</Relationships>');
+    z.add('word/settings.xml',
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+      +'<w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat>'
+      +'</w:settings>');
+    z.add('word/styles.xml',
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+      +'<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"'
+      +' xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml">'
+      +'<w:docDefaults><w:rPrDefault><w:rPr>'
+      +'<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
+      +'<w:sz w:val="24"/><w:szCs w:val="24"/><w:color w:val="000000"/>'
+      +'</w:rPr></w:rPrDefault></w:docDefaults>'
+      +'<w:style w:type="table" w:styleId="TableGrid">'
+      +'<w:name w:val="Table Grid"/>'
+      +'<w:tblPr><w:tblBorders>'
+      +'<w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'<w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'<w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'<w:insideH w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'<w:insideV w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+      +'</w:tblBorders></w:tblPr>'
+      +'</w:style>'
+      +'</w:styles>');
+    z.add('word/document.xml', buildDocumentXml());
 
-    // Monta ZIP
-    var localParts=[], cdParts=[], offset=0;
-    files.forEach(function(f){
-      var nm=enc.encode(f.n);
-      var crc=crc32(f.d);
-      var sz=f.d.length;
-      // Local header
-      var lh=new Uint8Array(30+nm.length);
-      var v=new DataView(lh.buffer);
-      v.setUint32(0,0x04034b50,true); v.setUint16(4,20,true);
-      v.setUint16(6,0,true); v.setUint16(8,0,true); // store
-      v.setUint16(10,0,true); v.setUint16(12,0,true); // time/date
-      v.setUint32(14,crc,true); v.setUint32(18,sz,true); v.setUint32(22,sz,true);
-      v.setUint16(26,nm.length,true); v.setUint16(28,0,true);
-      lh.set(nm,30);
-      localParts.push(lh,f.d);
-      // Central dir
-      var cd=new Uint8Array(46+nm.length);
-      var cv=new DataView(cd.buffer);
-      cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true);
-      cv.setUint16(8,0,true); cv.setUint16(10,0,true);
-      cv.setUint16(12,0,true); cv.setUint16(14,0,true);
-      cv.setUint32(16,crc,true); cv.setUint32(20,sz,true); cv.setUint32(24,sz,true);
-      cv.setUint16(28,nm.length,true); cv.setUint16(30,0,true); cv.setUint16(32,0,true);
-      cv.setUint16(34,0,true); cv.setUint16(36,0,true); cv.setUint32(38,0,true);
-      cv.setUint32(42,offset,true);
-      cd.set(nm,46);
-      cdParts.push(cd);
-      offset+=30+nm.length+sz;
-    });
-
-    var cdBuf=concat(cdParts);
-    var eocd=new Uint8Array(22);
-    var ev=new DataView(eocd.buffer);
-    ev.setUint32(0,0x06054b50,true);
-    ev.setUint16(4,0,true); ev.setUint16(6,0,true);
-    ev.setUint16(8,files.length,true); ev.setUint16(10,files.length,true);
-    ev.setUint32(12,cdBuf.length,true); ev.setUint32(16,offset,true);
-    ev.setUint16(20,0,true);
-
-    var blob=new Blob([concat(localParts),cdBuf,eocd],
-      {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    var blob=z.blob();
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
-    a.href=url; a.download='Requisitoria_B_Adm_Gu_Natal.docx';
-    document.body.appendChild(a); a.click();
+    a.href=url;a.download='Requisitoria_B_Adm_Gu_Natal.docx';
+    document.body.appendChild(a);a.click();
     document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url),1000);
     setStatus('✅ DOCX gerado com sucesso!',true);
@@ -625,21 +750,8 @@ function _gerarComImagem(pngBytes){
     console.error(err);
     setStatus('❌ Erro: '+err.message,false);
   }finally{
-    btn.textContent='📄 Gerar DOCX (Word)'; btn.disabled=false;
+    btn.textContent='📄 Gerar DOCX (Word)';btn.disabled=false;
   }
-}
-
-function concat(arrays){
-  var total=arrays.reduce((a,b)=>a+b.length,0);
-  var r=new Uint8Array(total),p=0;
-  arrays.forEach(a=>{r.set(a,p);p+=a.length;});
-  return r;
-}
-function crc32(buf){
-  if(!crc32.t){var t=crc32.t=new Uint32Array(256);for(var i=0;i<256;i++){var c=i;for(var j=0;j<8;j++)c=c&1?(0xedb88320^(c>>>1)):c>>>1;t[i]=c;}}
-  var c=0xffffffff;
-  for(var i=0;i<buf.length;i++)c=(c>>>8)^crc32.t[(c^buf[i])&0xff];
-  return(c^0xffffffff)>>>0;
 }
 
 document.getElementById('d_data').value=new Date().toISOString().slice(0,10);
